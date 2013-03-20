@@ -1,45 +1,37 @@
-var jsdom = require('jsdom');
-var Q = require("q");
+var jsdom = require('jsdom'),
+	Q = require('q'),
+	webshot = require('webshot');
 
 var domDeferred = Q.defer();
-var dbDeferred = Q.defer();
-dbDeferred.resolve();
 
-// Constant, Used for jsdom
-var BASE_URL = 'http://wiki.guildwars2.com/wiki/';
+function fetchText (url) {
 
-// eventually becomes the tip slug
-var url = 'Ice_Drake_Venom';
+	domDeferred.promise.then(function (data) {
+	    console.log(data);
+	});
 
-// Wait for DB and web crawl to complete, pass DOM data
-Q.all([domDeferred.promise, dbDeferred.promise]).spread(function (data) {
-    console.log(data);
-});
+	jsdom.env({
+		html: url,
+		scripts: ['http://code.jquery.com/jquery.js'],
+		done: parseSkill
+	});
 
-jsdom.env({
-	html: 'http://wiki.guildwars2.com/wiki/Ice_Drake_Venom',
-	scripts: ['http://code.jquery.com/jquery.js'],
-	done: parseSkill
-});
+	webshot(url, 'screnshot.png', function (err) {
+		console.log('Saved? ', err);
+	});
+
+}
 
 function parseSkill(errors, window) {
 	var $ = window.$,
-        data = '', 
-        selectors = [
-            'h1',
-            'h2',
-            'h3',
-            'h4',
-            'h5',
-            'h6',
-            'p',
-            'blockquote',
-            'td',
-            'dd',
-            'dt'
-        ];
-    $(selectors.join(', ')).each(function (i, el) {
-        data += $(el).text();
-    });
+		data = '';
+		copy = $('body').clone();
+
+	copy.find('script').remove();
+	copy.find(':hidden').remove();
+
+	data = copy.text();
     domDeferred.resolve(data);
 }
+
+exports.fetchText = fetchText;

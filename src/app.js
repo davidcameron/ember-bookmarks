@@ -1,12 +1,11 @@
 // Server
-var app = require('express')();
-var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
-
-var fs = require('fs');
-var util = require('util');
-
-var http = require('http');
+var app = require('express')(),
+	server = require('http').createServer(app),
+	io = require('socket.io').listen(server),
+	fs = require('fs'),
+	util = require('util'),
+	http = require('http'),
+	scraper = require('./models/tip');
 
 server.listen(8080);
 
@@ -16,27 +15,7 @@ io.sockets.on('connection', function (socket) {
 	
 });
 
-var opts = {
-	host: 'wiki.guildwars2.com',
-	port: 80,
-	path: '/wiki/Devourer_Venom',
-	method: 'GET'
-};
-console.log('about to instantiate request');
-var req = http.request(opts, function (res) {
-	console.log("begin request");
-	res.setEncoding('utf8');
-	res.on('data', function (chunk) {
-		console.log('chunk:');
-		console.log(chunk);
-	});
-});
-
-console.log(req);
-
-req.on('error', function (e) {
-	console.log(e.message);
-});
+scraper.fetchText('http://www.shibuiknits.com/');
 
 app.get('*', function (req, res) {
 	var filePath = './public';
@@ -77,5 +56,3 @@ app.get('*', function (req, res) {
     });
 
 });
-
-req.end();
