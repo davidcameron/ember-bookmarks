@@ -1,28 +1,38 @@
 var jsdom = require('jsdom'),
 	Q = require('q'),
-	webshot = require('webshot');
+	webshot = require('webshot'),
+	textDeferred = Q.defer(),
+	shotDeferred = Q.defer();
 
-var domDeferred = Q.defer();
 
-function fetchText (url) {
+function getSite (url) {
 
-	domDeferred.promise.then(function (data) {
+	textDeferred.promise.then(function (data) {
+
 	    console.log(data);
 	});
+
+	if (url.substring(0, 7) !== 'http://') {
+		url = 'http://' + url;
+	}
 
 	jsdom.env({
 		html: url,
 		scripts: ['http://code.jquery.com/jquery.js'],
-		done: parseSkill
+		done: fetchText
 	});
 
-	webshot(url, 'screnshot.png', function (err) {
-		console.log('Saved? ', err);
+	webshot(url, url + '.png', function (err) {
+		if (err) {
+			shotDeferred.reject(err);
+		} else {
+			shotDeferred.resolve();
+		}
 	});
 
 }
 
-function parseSkill(errors, window) {
+function fetchText(errors, window) {
 	var $ = window.$,
 		data = '';
 		copy = $('body').clone();
@@ -31,7 +41,8 @@ function parseSkill(errors, window) {
 	copy.find(':hidden').remove();
 
 	data = copy.text();
-    domDeferred.resolve(data);
+    textDeferred.resolve(data);
+
 }
 
-exports.fetchText = fetchText;
+exports.getSite = getSite;

@@ -11,11 +11,14 @@ server.listen(8080);
 
 io.sockets.on('connection', function (socket) {
 
-	socket.emit('tips:read', {"foo": "bar"});
+	socket.emit('update', {"foo": "bar"});
+
+	socket.on('create', function (data) {
+		console.log(data.url);
+		scraper.getSite(data.url);
+	});
 	
 });
-
-scraper.fetchText('http://www.shibuiknits.com/');
 
 app.get('*', function (req, res) {
 	var filePath = './public';

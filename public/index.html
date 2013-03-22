@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="css/main.css">
 
         <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -35,7 +36,10 @@
             <div class="hero-unit">
                 <h1>Unmind it.</h1>
                 <p>You find tons of stuff on the web. Blog posts, videos, and JavaScript libraries. Don't bookmark it. Don't write it down. Don't remember it. Unmind it.</p>
-                <p><a class="btn btn-large pull-right">Sign up with Facebook to get started.</a></p>
+                <div class="input-append js-unmind-input">
+                    <input class="span4" id="appendedInputButton" type="text">
+                    <button class="btn btn-primary" type="button">Unmind it!</button>
+                </div>
             </div>
 
             <!-- Example row of columns -->
