@@ -3,12 +3,16 @@ var jsdom = require('jsdom'),
 	webshot = require('webshot'),
 	md5 = require('MD5'),
 	mediaDir = 'media/screenshots/'
+	textDeferred = {},
+	shotDeferred = {},
+	allDeferred = {};
+
+
+function getSite (url) {
 	textDeferred = Q.defer(),
 	shotDeferred = Q.defer(),
 	allDeferred = Q.defer();
 
-
-function getSite (url) {
 	console.log('in getsite');
 	jsdom.env({
 		html: url,

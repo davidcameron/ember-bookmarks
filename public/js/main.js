@@ -1,7 +1,7 @@
 var socket = io.connect('/');
 
 socket.on('read:sites', function (data) {
-	console.log(data);
+	console.log('read:', data);
 	$.each(data, function (i, site) {
         Unminder.Site.allSites.addObject(Unminder.Site.create(site));
     });

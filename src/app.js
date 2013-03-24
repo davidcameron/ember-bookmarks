@@ -22,6 +22,7 @@ io.sockets.on('connection', function (socket) {
 		create.create(data.url)
 			.then(read.read)
 			.then(function (item) {
+				console.log('about to push down new site');
 				socket.emit('read:sites', item);
 			});
 	});

@@ -1,14 +1,14 @@
 var mongo = require('mongoskin'),
     Q = require("q"),
     scraper = require('./fetch'),
-    db = mongo.db('localhost/unminder', {safe: false}),
-    createDeferred = Q.defer();
+    db = mongo.db('localhost/unminder', {safe: false});
 
 db.collection('site').ensureIndex([['url', 1]], true);
 db.bind('site');
 
 function create (url) {
     console.log('in create');
+    createDeferred = Q.defer();
     if (url.substring(0, 7) !== 'http://') {
         url = 'http://' + url;
     }
