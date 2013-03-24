@@ -5,19 +5,26 @@ var app = require('express')(),
 	fs = require('fs'),
 	util = require('util'),
 	http = require('http'),
-	create = require('./models/create');
+	create = require('./models/create'),
+	read = require('./models/read');
+
+io.set('log level', 1);
 
 server.listen(8080);
 
 io.sockets.on('connection', function (socket) {
-
-	socket.emit('update', {"foo": "bar"});
-
-	socket.on('create', function (data) {
-		console.log(data.url);
-		create.create(data.url);
+	read.read().then(function (items) {
+		socket.emit('read:sites', items);
 	});
-	
+
+	socket.on('create:sites', function (data) {
+		console.log(data.url);
+		create.create(data.url)
+			.then(read.read)
+			.then(function (item) {
+				socket.emit('read:sites', item);
+			});
+	});
 });
 
 app.get('*', function (req, res) {
@@ -46,8 +53,11 @@ app.get('*', function (req, res) {
 			filePath += req.url;
 			contentType = "image/x-icon";
 			break;
+		case 'media':
+			filePath = '.' + req.url;
+			contentType = "image/png";
 	}
-
+	console.log('filePath: ', filePath);
 	fs.readFile(filePath, function (error, content) {
         if (error) {
             res.writeHead(501);

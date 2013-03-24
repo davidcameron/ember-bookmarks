@@ -27,8 +27,10 @@ function getSite (url) {
 	});
 
 	Q.allResolved([textDeferred.promise, shotDeferred.promise]).then(function (promises) {
+		var data = textDeferred.promise.valueOf();
+		data.image = shotDeferred.promise.valueOf();
 		// Pass the data from textDeferred
-		allDeferred.resolve(textDeferred.promise.valueOf());
+		allDeferred.resolve(data);
 	});
 	return allDeferred.promise;
 }

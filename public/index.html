@@ -22,6 +22,56 @@
 
         <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
+
+        <!-- Templates -->
+        <script type="text/x-handlebars" data-template-name="application">
+        <div class="container">
+
+            <!-- Main hero unit for a primary marketing message or call to action -->
+            <div class="row-fluid">
+                <div class="hero-unit">
+                    <h1>Unmind it.</h1>
+                    <p>You find tons of stuff on the web. Blog posts, videos, and JavaScript libraries. Unmind it.
+                    <div class="input-append js-unmind-input">
+                        <input class="" id="appendedInputButton" type="text">
+                        <button class="btn btn-primary" type="button">Unmind it!</button>
+                    </div>
+                    <p>{{#linkTo "index"}}Home{{/linkTo}} {{#linkTo "sites"}}Sites{{/linkTo}}</p>
+                </div>
+            </div>
+            <div class="row-fluid">
+                {{outlet}}
+            </div>
+        </div>
+        </script>
+
+        <script type="text/x-handlebars" data-template-name="index">
+            <h2>{{title}}</h2>
+        </script>
+
+        <script type="text/x-handlebars" data-template-name="sites">
+                <h2>Site list:</h2>
+                <ul class="thumbnails">
+                {{#each site in controller}}
+                    <li class="span4">
+                        <div class="thumbnail">
+                            
+                            <img {{bindAttr src="site.image"}}>
+                            <h3>{{site.title}}</h3>
+                            {{#linkTo site site}}See More{{/linkTo}}
+
+                        </div>
+                    </li>
+                    {{/each}}
+                </ul>
+        </script>
+        
+        <script type="text/x-handlebars" data-template-name="site">
+            Site: {{site.title}}, url: {{url}}
+        </script>
+        <!-- /Templates -->
+
+
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -30,27 +80,14 @@
 
         <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
 
-        <div class="container">
-
-            <!-- Main hero unit for a primary marketing message or call to action -->
-            <div class="hero-unit">
-                <h1>Unmind it.</h1>
-                <p>You find tons of stuff on the web. Blog posts, videos, and JavaScript libraries. Don't bookmark it. Don't write it down. Don't remember it. Unmind it.</p>
-                <div class="input-append js-unmind-input">
-                    <input class="span4" id="appendedInputButton" type="text">
-                    <button class="btn btn-primary" type="button">Unmind it!</button>
-                </div>
-            </div>
-
-            <!-- Example row of columns -->
-            
-
-        </div> <!-- /container -->
+        
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
 
         <script src="js/vendor/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0-rc.3/handlebars.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/ember.js/1.0.0-rc.1/ember.min.js"></script>
 
         <script src="js/main.js"></script>
 
