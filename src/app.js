@@ -5,7 +5,7 @@ var app = require('express')(),
 	fs = require('fs'),
 	util = require('util'),
 	http = require('http'),
-	scraper = require('./models/tip');
+	create = require('./models/create');
 
 server.listen(8080);
 
@@ -15,7 +15,7 @@ io.sockets.on('connection', function (socket) {
 
 	socket.on('create', function (data) {
 		console.log(data.url);
-		scraper.getSite(data.url);
+		create.create(data.url);
 	});
 	
 });
