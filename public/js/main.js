@@ -54,6 +54,23 @@ Unminder.SitesRoute = Ember.Route.extend({
     }
 });
 
+Unminder.AddSiteForm = Ember.View.extend({
+	classNames: ['input-append'],
+	controller: null,
+	textField: null,
+	save: function () {
+		var url = this.get('textField.value');
+		
+		socket.emit('create:sites', {url: url});
+	}
+});
+
+Unminder.AddSiteTextField = Ember.TextField.extend({});
+
+Unminder.AddSiteButton = Ember.Button.extend(Ember.TargetActionSupport, {
+	classNames: ['btn btn-primary']
+});
+
 /*
 Unminder.Site.allSites.addObject(Unminder.Site.create(
     {

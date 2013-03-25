@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
+        <title>Unminder</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
@@ -32,10 +32,10 @@
                 <div class="hero-unit">
                     <h1>Unmind it.</h1>
                     <p>You find tons of stuff on the web. Blog posts, videos, and JavaScript libraries. Unmind it.
-                    <div class="input-append js-unmind-input">
-                        <input class="" id="appendedInputButton" type="text">
-                        <button class="btn btn-primary" type="button">Unmind it!</button>
-                    </div>
+                    {{#view Unminder.AddSiteForm}}
+                        {{view Unminder.AddSiteTextField viewName="textField"}}
+                        {{#view Unminder.AddSiteButton action="save" target="view"}}Unmind it!{{/view}}
+                    {{/view}}
                     <p>{{#linkTo "index"}}Home{{/linkTo}} {{#linkTo "sites"}}Sites{{/linkTo}}</p>
                 </div>
             </div>
@@ -51,13 +51,13 @@
 
         <script type="text/x-handlebars" data-template-name="sites">
                 <h2>Site list:</h2>
-                <ul class="thumbnails">
+                <ul class="thumbnails site-list">
                 {{#each site in controller}}
                     <li class="span2">
                         <div class="thumbnail">
                             
                             <img {{bindAttr src="site.image"}}>
-                            <h4>{{site.title}}</h4>
+                            <h4 class="site-title">{{site.title}}</h4>
                             {{#linkTo site site}}See More{{/linkTo}}
 
                         </div>
