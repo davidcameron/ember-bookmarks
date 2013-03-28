@@ -30,8 +30,8 @@
             <!-- Main hero unit for a primary marketing message or call to action -->
             <div class="row-fluid">
                 <div class="hero-unit">
-                    <h1>Unmind it.</h1>
-                    <p>You find tons of stuff on the web. Blog posts, videos, and JavaScript libraries. Unmind it.
+                    <h1>Unminder</h1>
+                    <br>
                     {{#view Unminder.AddSiteForm}}
                         {{view Unminder.AddSiteTextField viewName="textField"}}
                         {{#view Unminder.AddSiteButton action="save" target="view"}}Unmind it!{{/view}}
@@ -53,21 +53,21 @@
                 <h2>Site list:</h2>
                 <ul class="thumbnails site-list">
                 {{#each site in controller}}
-                    <li class="span2">
+                    {{#view Unminder.SiteThumbnail}}
                         <div class="thumbnail">
-                            
-                            <img {{bindAttr src="site.image"}}>
-                            <h4 class="site-title">{{site.title}}</h4>
+                        <button data-toggle="tooltip" title="remove" {{action delete site}} class="close">&times;</button>
+                            <a target="_blank" {{bindAttr href="site.url"}}>
+                                <img {{bindAttr src="site.image"}}>
+                            </a>
+                            <a target="_blank" {{bindAttr href="site.url"}}>
+                                <h4 class="site-title">{{site.title}}</h4>
+                            </a>
                             {{#linkTo site site}}See More{{/linkTo}}
 
                         </div>
-                    </li>
+                    {{/view}}
                     {{/each}}
                 </ul>
-        </script>
-        
-        <script type="text/x-handlebars" data-template-name="site">
-            Site: {{site.title}}, url: {{url}}
         </script>
         <!-- /Templates -->
 

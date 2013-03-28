@@ -6,7 +6,8 @@ var app = require('express')(),
 	util = require('util'),
 	http = require('http'),
 	create = require('./models/create'),
-	read = require('./models/read');
+	read = require('./models/read'),
+	destroy = require('./models/destroy');
 
 io.set('log level', 1);
 
@@ -14,7 +15,7 @@ server.listen(8080);
 
 io.sockets.on('connection', function (socket) {
 	read.read().then(function (items) {
-		socket.emit('read:sites', items);
+		socket.emit('sites:all', items);
 	});
 
 	socket.on('create:sites', function (data) {
@@ -23,8 +24,12 @@ io.sockets.on('connection', function (socket) {
 			.then(read.read)
 			.then(function (item) {
 				console.log('about to push down new site');
-				socket.emit('read:sites', item);
+				socket.emit('sites:one', item);
 			});
+	});
+
+	socket.on('destroy:site', function (data) {
+		destroy.destroy(data.url);
 	});
 });
 

@@ -1,25 +1,19 @@
 var socket = io.connect('/');
 
-socket.on('read:sites', function (data) {
-	console.log('read:', data);
-	$.each(data, function (i, site) {
-        Unminder.Site.allSites.addObject(Unminder.Site.create(site));
-    });
-});
-/*
- socket.on('read:sites', function (data) {
-    $.each(data, function (i, site) {
-        Unminder.Site.allSites.addObject(Unminder.Site.create(site));
-    });
-})
-*/
+socket.on('sites:all', function (data) {
+	var siteCollection = Unminder.Site.allSites;
+	siteCollection.clear();
 
-$('body').on('.js-unmind-input button', 'click', function () {
-	console.log('clicked');
-	var url = $(this).closest('.js-unmind-input').find('input').val();
-	socket.emit('create:sites', {url: url});
-	console.log('url:', url);
+	$.each(data, function (i, site) {
+        siteCollection.addObject(Unminder.Site.create(site));
+    });
 });
+
+socket.on('sites:one', function (data) {
+    Unminder.Site.allSites.addObject(Unminder.Site.create(data[0]));
+});
+
+// Ember
 
 var Unminder = Ember.Application.create();
 
@@ -35,7 +29,7 @@ Unminder.Router.map(function () {
 
 Unminder.IndexRoute = Ember.Route.extend({
     setupController: function (controller) {
-        controller.set('title', "Index Controller works!");
+        controller.set('title', "Unminder Index Route!");
     }
 });
 
@@ -54,13 +48,24 @@ Unminder.SitesRoute = Ember.Route.extend({
     }
 });
 
+Unminder.SitesController = Ember.ArrayController.extend({
+    delete: function (site) {
+        Unminder.Site.allSites.removeObject(site);
+        socket.emit('destroy:site', {url: site.url});
+    }
+});
+
+Unminder.SiteThumbnail = Ember.View.extend({
+	classNames: ['span2'],
+	tagName: 'li'
+});
+
 Unminder.AddSiteForm = Ember.View.extend({
 	classNames: ['input-append'],
 	controller: null,
 	textField: null,
 	save: function () {
 		var url = this.get('textField.value');
-		
 		socket.emit('create:sites', {url: url});
 	}
 });
@@ -80,3 +85,5 @@ Unminder.Site.allSites.addObject(Unminder.Site.create(
     }
 ));
 */
+
+$('.close').tooltip();
