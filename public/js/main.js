@@ -1,3 +1,4 @@
+/* Server Communication */
 var socket = io.connect('/');
 
 socket.on('sites:all', function (data) {
@@ -10,10 +11,10 @@ socket.on('sites:all', function (data) {
 });
 
 socket.on('sites:one', function (data) {
-    Unminder.Site.allSites.addObject(Unminder.Site.create(data[0]));
+    Unminder.Site.insert(Ember.Object.create(data[0]));
 });
 
-// Ember
+/* Ember Classes */
 
 var Unminder = Ember.Application.create();
 
@@ -27,26 +28,41 @@ Unminder.Router.map(function () {
     this.route('site', {path: '/sites/:site_id'});
 });
 
+/* Routes */
+
 Unminder.IndexRoute = Ember.Route.extend({
     setupController: function (controller) {
         controller.set('title', "Unminder Index Route!");
     }
 });
 
+Unminder.SitesRoute = Ember.Route.extend({
+    model: function () {
+        return Unminder.Site.all();
+    }
+});
+
+/* Models */
+
 Unminder.Site = Ember.Object.extend();
+
 Unminder.Site.reopenClass({
     allSites: [],
     all: function () {
         return this.allSites;
+    },
+    insert: function (obj) {
+        var record = this.allSites.findProperty('url', obj.get('url'));
+        if (record) {
+            record.set('image', obj.image);
+            record.set('title', obj.title);
+        } else {
+            this.allSites.addObject(obj);
+        }
     }
 });
 
-Unminder.SitesRoute = Ember.Route.extend({
-    model: function () {
-        console.log('in sites route', Unminder.Site.all());
-        return Unminder.Site.all();
-    }
-});
+/* Controllers */
 
 Unminder.SitesController = Ember.ArrayController.extend({
     delete: function (site) {
@@ -54,6 +70,8 @@ Unminder.SitesController = Ember.ArrayController.extend({
         socket.emit('destroy:site', {url: site.url});
     }
 });
+
+/* Views */
 
 Unminder.SiteThumbnail = Ember.View.extend({
 	classNames: ['span2'],
@@ -67,6 +85,9 @@ Unminder.AddSiteForm = Ember.View.extend({
 	save: function () {
 		var url = this.get('textField.value');
 		socket.emit('create:sites', {url: url});
+        this.set('textField.value', '');
+
+        Unminder.Site.insert(Ember.Object.create({url: url}));
 	}
 });
 
@@ -85,5 +106,3 @@ Unminder.Site.allSites.addObject(Unminder.Site.create(
     }
 ));
 */
-
-$('.close').tooltip();

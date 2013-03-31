@@ -31,6 +31,10 @@ io.sockets.on('connection', function (socket) {
 	socket.on('destroy:site', function (data) {
 		destroy.destroy(data.url);
 	});
+
+	socket.on('update:site', function (data) {
+		update.update(data.query, data.data);
+	});
 });
 
 app.get('*', function (req, res) {
