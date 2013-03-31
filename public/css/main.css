@@ -13,6 +13,15 @@
 	min-height: 100px;
 }
 
+/* Boostrap Fixes */
+.row-fluid.collection [class*="span"]:first-of-type {
+	margin-left: 0;
+}
+
+.row-fluid.collection .span4:nth-of-type(4) {
+	margin-left: 0;
+}
+
 /* Animation keyframes - you need to add prefixes */
 @-webkit-keyframes spin {
     from { -webkit-transform: rotate(0deg); }

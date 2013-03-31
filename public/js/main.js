@@ -57,7 +57,7 @@ Unminder.Site.reopenClass({
             record.set('image', obj.image);
             record.set('title', obj.title);
         } else {
-            this.allSites.addObject(obj);
+            this.allSites.unshiftObject(obj);
         }
     }
 });
@@ -74,7 +74,7 @@ Unminder.SitesController = Ember.ArrayController.extend({
 /* Views */
 
 Unminder.SiteThumbnail = Ember.View.extend({
-	classNames: ['span2'],
+	classNames: ['span4'],
 	tagName: 'li'
 });
 
@@ -95,6 +95,10 @@ Unminder.AddSiteTextField = Ember.TextField.extend({});
 
 Unminder.AddSiteButton = Ember.Button.extend(Ember.TargetActionSupport, {
 	classNames: ['btn btn-primary']
+});
+
+Unminder.SpinnerView = Ember.View.extend({
+    templateName: 'spinner'
 });
 
 /*
