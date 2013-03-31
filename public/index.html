@@ -60,24 +60,36 @@
         </script>
 
         <script type="text/x-handlebars" data-template-name="sites">
-                <h2>Site list:</h2>
-                <ul class="thumbnails site-list">
-                {{#each site in controller}}
-                    {{#view Unminder.SiteThumbnail}}
-                        <div class="thumbnail">
-                        <button data-toggle="tooltip" title="remove" {{action delete site}} class="close">&times;</button>
-                            <a target="_blank" {{bindAttr href="site.url"}}>
-                                <img {{bindAttr src="site.image"}}>
-                            </a>
-                            <a target="_blank" {{bindAttr href="site.url"}}>
-                                <h4 class="site-title">{{site.title}}</h4>
-                            </a>
-                            {{#linkTo site site}}See More{{/linkTo}}
+            <h2>Site list:</h2>
+            <ul class="thumbnails site-list">
+            {{#each site in controller}}
+                {{#view Unminder.SiteThumbnail}}
+                    <div class="thumbnail">
+                    <button data-toggle="tooltip" title="remove" {{action delete site}} class="close">&times;</button>
 
+                    <a target="_blank" {{bindAttr href="site.url"}} class="thumbnail-image-container">
+                    {{#if site.image}}
+                        <img {{bindAttr src="site.image"}}>
+                    {{else}}
+                        <div class="loading">
+                            <div class="spinner">
+                                <div class="mask">
+                                    <div class="maskedCircle"></div>
+                                </div>
+                            </div>
                         </div>
-                    {{/view}}
-                    {{/each}}
-                </ul>
+                    {{/if}}
+                    </a>
+
+                    <a target="_blank" {{bindAttr href="site.url"}}>
+                        <h4 class="site-title">{{site.title}}</h4>
+                    </a>
+                    {{#linkTo site site}}See More{{/linkTo}}
+
+                </div>
+            {{/view}}
+            {{/each}}
+            </ul>
         </script>
         <!-- /Templates -->
 
