@@ -38,13 +38,13 @@
                     </div>
                 </div>
                 <div class="span9">
-                    <div class="hero-unit">
+                    <div>
                         <h1>Unminder</h1>
                         <br>
-                        {{#view Unminder.AddSiteForm}}
-                            {{view Unminder.AddSiteTextField viewName="textField"}}
-                            {{#view Unminder.AddSiteButton action="save" target="view"}}Unmind it!{{/view}}
-                        {{/view}}
+                        <div class="input-append">
+                            {{view Ember.TextField valueBinding="newSite" action="createSite"}}
+                            {{#view Unminder.AddSiteButton action="createSite" target="controller"}}Unmind it!{{/view}}
+                        </div>
                         <p>{{#linkTo "index"}}Home{{/linkTo}} {{#linkTo "sites"}}Sites{{/linkTo}}</p>
                     </div>
                     <div class="row-fluid collection">

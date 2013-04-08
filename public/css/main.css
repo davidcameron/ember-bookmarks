@@ -10,7 +10,7 @@
 .thumbnail-image-container {
 	position: relative;
 	display: block;
-	min-height: 100px;
+	min-height: 226px;
 }
 
 /* Boostrap Fixes */
@@ -18,7 +18,7 @@
 	margin-left: 0;
 }
 
-.row-fluid.collection .span4:nth-of-type(4) {
+.row-fluid.collection .span4:nth-of-type(3n+1) {
 	margin-left: 0;
 }
 

@@ -4,7 +4,6 @@ var app = require('express')(),
 	io = require('socket.io').listen(server),
 	fs = require('fs'),
 	util = require('util'),
-	http = require('http'),
 	create = require('./models/create'),
 	read = require('./models/read'),
 	destroy = require('./models/destroy');

@@ -18,11 +18,6 @@ socket.on('sites:one', function (data) {
 
 var Unminder = Ember.Application.create();
 
-Unminder.ApplicationController = Ember.Controller.extend({
-    firstName: "David",
-    lastName: "Cameron"
-});
-
 Unminder.Router.map(function () {
     this.route('sites');
     this.route('site', {path: '/sites/:site_id'});
@@ -62,12 +57,28 @@ Unminder.Site.reopenClass({
     }
 });
 
-/* Controllers */
-
 Unminder.SitesController = Ember.ArrayController.extend({
     delete: function (site) {
         Unminder.Site.allSites.removeObject(site);
         socket.emit('destroy:site', {url: site.url});
+    }
+});
+
+/* Controllers */
+
+Unminder.ApplicationController = Ember.Controller.extend({
+    createSite: function () {
+        var url = this.get('newSite');
+
+        if (url.substring(0, 7) !== 'http://') {
+            url = 'http://' + url;
+        }
+
+        this.set('newSite', '');
+
+        socket.emit('create:sites', {url: url});
+
+        Unminder.Site.insert(Ember.Object.create({url: url}));
     }
 });
 
@@ -78,35 +89,8 @@ Unminder.SiteThumbnail = Ember.View.extend({
 	tagName: 'li'
 });
 
-Unminder.AddSiteForm = Ember.View.extend({
-	classNames: ['input-append'],
-	controller: null,
-	textField: null,
-	save: function () {
-		var url = this.get('textField.value');
-		socket.emit('create:sites', {url: url});
-        this.set('textField.value', '');
-
-        Unminder.Site.insert(Ember.Object.create({url: url}));
-	}
-});
-
-Unminder.AddSiteTextField = Ember.TextField.extend({});
-
 Unminder.AddSiteButton = Ember.Button.extend(Ember.TargetActionSupport, {
 	classNames: ['btn btn-primary']
 });
 
-Unminder.SpinnerView = Ember.View.extend({
-    templateName: 'spinner'
-});
-
-/*
-Unminder.Site.allSites.addObject(Unminder.Site.create(
-    {
-        title: "Ember.js",
-        url: "http://www.google.com",
-        image: "http://return-true.com/wp-content/uploads/2012/05/getting-started-with-ember.png"
-    }
-));
-*/
+Unminder.SpinnerView = Ember.View.extend({templateName: 'spinner'});
