@@ -6,12 +6,12 @@ socket.on('sites:all', function (data) {
 	siteCollection.clear();
 
 	$.each(data, function (i, site) {
-        siteCollection.addObject(Unminder.Site.create(site));
+        siteCollection.addObject(Unminder.SiteInstance.create(site));
     });
 });
 
 socket.on('sites:one', function (data) {
-    Unminder.Site.insert(Ember.Object.create(data[0]));
+    Unminder.Site.insert(Unminder.SiteInstance.create(data[0]));
 });
 
 /* Ember Classes */
@@ -57,6 +57,14 @@ Unminder.Site.reopenClass({
     }
 });
 
+Unminder.SiteInstance = Ember.Object.extend({
+    backgroundStyle: function() {
+        var backgroundImage = this.get('image');
+        var styleString = 'background-image: url(' + backgroundImage + ')';
+        return styleString;
+    }.property('image')
+});
+
 Unminder.SitesController = Ember.ArrayController.extend({
     delete: function (site) {
         Unminder.Site.allSites.removeObject(site);
@@ -78,7 +86,7 @@ Unminder.ApplicationController = Ember.Controller.extend({
 
         socket.emit('create:sites', {url: url});
 
-        Unminder.Site.insert(Ember.Object.create({url: url}));
+        Unminder.Site.insert(Unminder.SiteInstance.create({url: url}));
     }
 });
 

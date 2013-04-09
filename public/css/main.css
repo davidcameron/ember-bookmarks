@@ -10,7 +10,11 @@
 .thumbnail-image-container {
 	position: relative;
 	display: block;
-	min-height: 226px;
+}
+
+.thumbnail-image {
+    background-size: cover;
+    height: 200px;
 }
 
 /* Boostrap Fixes */

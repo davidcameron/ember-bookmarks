@@ -82,11 +82,11 @@
                     </a>
 
                     <a target="_blank" {{bindAttr href="site.url"}} class="thumbnail-image-container">
-                    {{#if site.image}}
-                        <img {{bindAttr src="site.image"}}>
-                    {{else}}
+                    <div class="thumbnail-image" {{bindAttr style="site.backgroundStyle"}}>
+                        {{#unless site.image}}
                         {{view Unminder.SpinnerView}}
-                    {{/if}}
+                        {{/unless}}
+                    </div>
                     </a>
                     {{#linkTo site site}}See More{{/linkTo}}
 
