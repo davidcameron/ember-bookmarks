@@ -59,34 +59,62 @@ Unminder.Site.reopenClass({
 
 Unminder.SiteInstance = Ember.Object.extend({
     backgroundStyle: function() {
+        if (!this.get('image')) {
+            return '';
+        }
+
         var backgroundImage = this.get('image');
         var styleString = 'background-image: url(' + backgroundImage + ')';
         return styleString;
     }.property('image')
 });
 
-Unminder.SitesController = Ember.ArrayController.extend({
-    delete: function (site) {
-        Unminder.Site.allSites.removeObject(site);
-        socket.emit('destroy:site', {url: site.url});
+Unminder.Category = Ember.Object.extend();
+
+Unminder.CategoryList = Ember.Object.extend();
+
+Unminder.CategoryList.reopenClass({
+    allCategories: [],
+    all: function () {
+        return this.allCategories;
+    },
+    insert: function (obj) {
+        var category = this.allCategories.findProperty('slug', obj.get('slug'));
+        if (!category) {
+            this.allCategories.unshiftObject(obj);
+        }
     }
 });
 
 /* Controllers */
 
 Unminder.ApplicationController = Ember.Controller.extend({
+    isAdding: false,
+    categories: Unminder.CategoryList.all(),
+    startAddingSite: function () {
+        this.set('isAdding', true);
+    },
     createSite: function () {
-        var url = this.get('newSite');
+        var url = this.get('newSite'),
+            category = this.get('newSiteCategory');
 
         if (url.substring(0, 7) !== 'http://') {
             url = 'http://' + url;
         }
 
         this.set('newSite', '');
+        var toAdd = {url: url, category: category};
+        console.log(toAdd);
+        socket.emit('create:sites', toAdd);
 
-        socket.emit('create:sites', {url: url});
+        Unminder.Site.insert(Unminder.SiteInstance.create(toAdd));
+    }
+});
 
-        Unminder.Site.insert(Unminder.SiteInstance.create({url: url}));
+Unminder.SitesController = Ember.ArrayController.extend({
+    delete: function (site) {
+        Unminder.Site.allSites.removeObject(site);
+        socket.emit('destroy:site', {url: site.url});
     }
 });
 
@@ -102,3 +130,14 @@ Unminder.AddSiteButton = Ember.Button.extend(Ember.TargetActionSupport, {
 });
 
 Unminder.SpinnerView = Ember.View.extend({templateName: 'spinner'});
+
+/* Test Content */
+var categories = [
+    {slug: 'mvc', niceName: 'JavaScript MVC Frameworks'},
+    {slug: 'performance', niceName: 'Frontend Performance Articles'},
+    {slug: 'comics', niceName: 'Web Comics'}
+];
+
+$.each(categories, function (i, val) {
+    Unminder.CategoryList.insert(Unminder.Category.create(val));
+});

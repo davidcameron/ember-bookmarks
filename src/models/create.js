@@ -6,14 +6,15 @@ var mongo = require('mongoskin'),
 db.collection('site').ensureIndex([['url', 1]], true);
 db.bind('site');
 
-function create (url) {
+function create (data) {
     console.log('in create');
     createDeferred = Q.defer();
+    var url = data.url;
     if (url.substring(0, 7) !== 'http://') {
         url = 'http://' + url;
     }
 
-    db.site.insert({url:url}, function (err) {
+    db.site.insert({url: url, category: data.category}, function (err) {
         console.log('in insert');
         if (err) {
             console.log('insert error', err);

@@ -1,7 +1,7 @@
 .site-list .site-title {
 	font-size: 18px;
 	line-height: 18px;
-	height: 18px;
+	height: 20px;
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
@@ -9,7 +9,6 @@
 
 .thumbnail-image-container {
 	position: relative;
-	display: block;
 }
 
 .thumbnail-image {

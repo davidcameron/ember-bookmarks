@@ -5,6 +5,7 @@ var mongo = require('mongoskin'),
 db.collection('site').ensureIndex([['url', 1]], true);
 db.bind('site');
 
+// TODO fix this mess
 function read (filter) {
     console.log('in read:', filter);
     readDeferred = Q.defer();

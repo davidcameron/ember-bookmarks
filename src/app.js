@@ -18,8 +18,7 @@ io.sockets.on('connection', function (socket) {
 	});
 
 	socket.on('create:sites', function (data) {
-		console.log(data.url);
-		create.create(data.url)
+		create.create(data)
 			.then(read.read)
 			.then(function (item) {
 				console.log('about to push down new site');
