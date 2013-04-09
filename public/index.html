@@ -31,9 +31,9 @@
                     <div class="well sidebar-nav">
                         <ul class="nav nav-list">
                             <li class="nav-header">Categories</li>
-                            <li class="active"><a href="#">All Sites</a></li>
-                            <li><a href="#">MVC JS Frameworks</a></li>
-                            <li><a href="#">+ New Category</a></li>
+                            {{#each category in categories}}
+                            <li><a href="#">{{category.niceName}}</a></li>
+                            {{/each}}
                         </ul>
                     </div>
                 </div>
