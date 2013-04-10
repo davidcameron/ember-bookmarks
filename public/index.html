@@ -32,7 +32,7 @@
                         <ul class="nav nav-list">
                             <li class="nav-header">Categories</li>
                             {{#each category in categories}}
-                            <li><a href="#">{{category.niceName}}</a></li>
+                            <li>{{#linkTo category category.slug}}{{category.niceName}}{{/linkTo}}</li>
                             {{/each}}
                         </ul>
                     </div>
@@ -103,6 +103,7 @@
             {{/each}}
             </ul>
         </script>
+
         <!-- /Templates -->
 
 
