@@ -1,5 +1,8 @@
+'use strict';
 /* Server Communication */
 var socket = io.connect('/');
+
+var Unminder = Ember.Application.create();
 
 socket.on('sites:all', function (data) {
 	var siteCollection = Unminder.Site.allSites;
@@ -16,11 +19,9 @@ socket.on('sites:one', function (data) {
 
 /* Ember Classes */
 
-var Unminder = Ember.Application.create();
-
 Unminder.Router.map(function () {
     this.route('sites');
-    this.route('site', {path: '/sites/:site_id'});
+    this.resource('category', {path: '/category/:category_slug'});
 });
 
 /* Routes */
@@ -34,6 +35,17 @@ Unminder.IndexRoute = Ember.Route.extend({
 Unminder.SitesRoute = Ember.Route.extend({
     model: function () {
         return Unminder.Site.all();
+    }
+});
+
+Unminder.CategoryRoute = Ember.Route.extend({
+    setupController: function (controller, model) {
+        controller.set('content', model);
+        controller.set('name', 'tj');
+    },
+    model: function () {
+        console.log('getting model');
+        Unminder.Site.all();
     }
 });
 
@@ -58,13 +70,13 @@ Unminder.Site.reopenClass({
 });
 
 Unminder.SiteInstance = Ember.Object.extend({
-    backgroundStyle: function() {
+    backgroundStyle: function () {
         if (!this.get('image')) {
             return '';
         }
 
-        var backgroundImage = this.get('image');
-        var styleString = 'background-image: url(' + backgroundImage + ')';
+        var backgroundImage = this.get('image'),
+            styleString = 'background-image: url(' + backgroundImage + ')';
         return styleString;
     }.property('image')
 });
@@ -96,15 +108,15 @@ Unminder.ApplicationController = Ember.Controller.extend({
     },
     createSite: function () {
         var url = this.get('newSite'),
-            category = this.get('newSiteCategory');
+            category = this.get('newSiteCategory'),
+            toAdd;
 
         if (url.substring(0, 7) !== 'http://') {
             url = 'http://' + url;
         }
 
         this.set('newSite', '');
-        var toAdd = {url: url, category: category};
-        console.log(toAdd);
+        toAdd = {url: url, category: category};
         socket.emit('create:sites', toAdd);
 
         Unminder.Site.insert(Unminder.SiteInstance.create(toAdd));
@@ -115,7 +127,18 @@ Unminder.SitesController = Ember.ArrayController.extend({
     delete: function (site) {
         Unminder.Site.allSites.removeObject(site);
         socket.emit('destroy:site', {url: site.url});
-    }
+    },
+    // Figure out how to get this working with routing!
+    inCategory: function () {
+        return this.filterProperty('category', 'comics')
+    }.property('@each')
+});
+
+Unminder.CategoryController = Ember.ArrayController.extend({
+    filteredSites: function () {
+        return this.get('content');
+    },
+    foo: 'dis bar'
 });
 
 /* Views */
