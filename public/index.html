@@ -104,6 +104,32 @@
             </ul>
         </script>
 
+        <script type="text/x-handlebars" data-template-name="category">
+            <h2>Category Template: {{foo}}</h2>
+            <ul class="thumbnails site-list">
+            {{#each site in controller.filteredSites}}
+                {{#view Unminder.SiteThumbnail}}
+                <div class="thumbnail" draggable="true">
+
+                    <button data-toggle="tooltip" title="remove" {{action delete site}} class="close">&times;</button>
+                    <a target="_blank" {{bindAttr href="site.url"}}>
+                        <h4 class="site-title">{{site.title}}</h4>
+                    </a>
+
+                    <a target="_blank" {{bindAttr href="site.url"}} class="thumbnail-image-container" draggable="false">
+                        <div class="thumbnail-image" {{bindAttr style="site.backgroundStyle"}}>
+                            {{#unless site.image}}
+                            {{view Unminder.SpinnerView}}
+                            {{/unless}}
+                        </div>
+                    </a>
+                    <p>Category: {{site.category}}</p>
+                </div>
+                {{/view}}
+            {{/each}}
+            </ul>
+        </script>
+
         <!-- /Templates -->
 
 

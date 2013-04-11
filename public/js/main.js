@@ -40,12 +40,15 @@ Unminder.SitesRoute = Ember.Route.extend({
 
 Unminder.CategoryRoute = Ember.Route.extend({
     setupController: function (controller, model) {
-        controller.set('content', model);
-        controller.set('name', 'tj');
+        var filtered_model = Unminder.Site.all();
+        console.log('setting up controller');
+        console.log(model);
+        controller.set('content', filtered_model);
+        controller.set('slug', model);
     },
-    model: function () {
-        console.log('getting model');
-        Unminder.Site.all();
+    model: function (params) {
+        console.log('getting models for: ', params);
+        return params.category_slug;//Unminder.Site.all();//.filterProperty('title');
     }
 });
 
@@ -134,10 +137,12 @@ Unminder.SitesController = Ember.ArrayController.extend({
     }.property('@each')
 });
 
-Unminder.CategoryController = Ember.ArrayController.extend({
+Unminder.CategoryController = Ember.ObjectController.extend({
+    content: [],
+    slug: null,
     filteredSites: function () {
-        return this.get('content');
-    },
+        return this.get('content').filterProperty('category', this.get('slug'));
+    }.property('content.@each'),
     foo: 'dis bar'
 });
 
