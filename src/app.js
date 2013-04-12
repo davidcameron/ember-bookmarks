@@ -1,4 +1,3 @@
-// Server
 var app = require('express')(),
 	server = require('http').createServer(app),
 	io = require('socket.io').listen(server),
@@ -6,7 +5,8 @@ var app = require('express')(),
 	util = require('util'),
 	create = require('./models/create'),
 	read = require('./models/read'),
-	destroy = require('./models/destroy');
+	destroy = require('./models/destroy'),
+	api = require('./api');
 
 io.set('log level', 1);
 
@@ -21,7 +21,6 @@ io.sockets.on('connection', function (socket) {
 		create.create(data)
 			.then(read.read)
 			.then(function (item) {
-				console.log('about to push down new site');
 				socket.emit('sites:one', item);
 			});
 	});
@@ -64,16 +63,27 @@ app.get('*', function (req, res) {
 		case 'media':
 			filePath = '.' + req.url;
 			contentType = "image/png";
+			break;
+		case 'api':
+			filePath = false;
+			break;
 	}
-	console.log('filePath: ', filePath);
-	fs.readFile(filePath, function (error, content) {
-        if (error) {
-            res.writeHead(501);
-            res.end('Big ol\' error!');
-        } else {
-            res.writeHead(200, { 'Content-Type': contentType });
-            res.end(content, 'utf-8');
-        }
-    });
+	if (filePath) {
+		fs.readFile(filePath, function (error, content) {
+	        if (error) {
+	            res.writeHead(501);
+	            res.end('Big ol\' error!');
+	        } else {
+	            res.writeHead(200, { 'Content-Type': contentType });
+	            res.end(content, 'utf-8');
+	        }
+	    });
+	} else {
+
+		api.read(params.slice(2)).then(function(json) {
+			res.writeHead(200, {'Content-Type': 'application/json'});
+	        res.end(json, 'utf-8');
+		});
+	}
 
 });
