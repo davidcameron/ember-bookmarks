@@ -9,13 +9,20 @@ var express = require('express'),
 	destroy = require('./src/models/destroy'),
 	api = require('.//src/api');
 
+app.use(express.bodyParser());
 app.use(express.static(__dirname + '/public'));
-
 app.use('/media', express.static(__dirname + '/media'));
 
 app.get('/api/sites', function (req, res) {
 	api.read(['sites']).then(function (json) {
 		res.send(json);	
+	});
+});
+
+app.post('/api/sites', function (req, res) {
+	console.log('POST: /api/sites', req.body);
+	create.create(req.body).then(function (data) {
+		res.send(data);
 	});
 });
 

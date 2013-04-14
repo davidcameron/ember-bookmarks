@@ -9,6 +9,7 @@ db.bind('site');
 function create (data) {
     console.log('in create');
     createDeferred = Q.defer();
+    data = data.site;
     var url = data.url;
     if (url.substring(0, 7) !== 'http://') {
         url = 'http://' + url;

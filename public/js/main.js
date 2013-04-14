@@ -48,53 +48,6 @@ Unminder.Site = DS.Model.extend({
     }.property('image')
 });
 
-/*Unminder.Site = Ember.Object.extend();
-
-Unminder.Site.reopenClass({
-    allSites: [],
-    all: function () {
-        return this.allSites;
-    },
-    insert: function (obj) {
-        var record = this.allSites.findProperty('url', obj.get('url'));
-        if (record) {
-            record.set('image', obj.image);
-            record.set('title', obj.title);
-        } else {
-            this.allSites.unshiftObject(obj);
-        }
-    }
-});
-
-Unminder.SiteInstance = Ember.Object.extend({
-    backgroundStyle: function () {
-        if (!this.get('image')) {
-            return '';
-        }
-
-        var backgroundImage = this.get('image'),
-            styleString = 'background-image: url(' + backgroundImage + ')';
-        return styleString;
-    }.property('image')
-});
-
-Unminder.Category = Ember.Object.extend();
-
-Unminder.CategoryList = Ember.Object.extend();
-
-Unminder.CategoryList.reopenClass({
-    allCategories: [],
-    all: function () {
-        return this.allCategories;
-    },
-    insert: function (obj) {
-        var category = this.allCategories.findProperty('slug', obj.get('slug'));
-        if (!category) {
-            this.allCategories.unshiftObject(obj);
-        }
-    }
-});*/
-
 /* Controllers */
 
 Unminder.ApplicationController = Ember.Controller.extend({
@@ -104,24 +57,23 @@ Unminder.ApplicationController = Ember.Controller.extend({
     },
     createSite: function () {
         var url = this.get('newSite'),
-            category = this.get('newSiteCategory'),
-            toAdd;
+            category = this.get('newSiteCategory');
 
         if (url.substring(0, 7) !== 'http://') {
             url = 'http://' + url;
         }
+
+        console.log('url: ', url);
+
+        Unminder.Site.createRecord({url: url});
+        this.get('store').commit();
     }
 });
 
 Unminder.SitesController = Ember.ArrayController.extend({
     delete: function (site) {
         Unminder.Site.allSites.removeObject(site);
-        socket.emit('destroy:site', {url: site.url});
-    },
-    // Figure out how to get this working with routing!
-    inCategory: function () {
-        return this.filterProperty('category', 'comics')
-    }.property('@each')
+    }
 });
 
 /* Views */

@@ -30,9 +30,6 @@
                     <div class="well sidebar-nav">
                         <ul class="nav nav-list">
                             <li class="nav-header">Categories</li>
-                            {{#each category in categories}}
-                            <li>{{#linkTo category category.slug}}{{category.niceName}}{{/linkTo}}</li>
-                            {{/each}}
                         </ul>
                     </div>
                 </div>
@@ -45,11 +42,7 @@
                         </div>
                         {{#if newSite}}
                             <div class="form-inline">
-                                {{view Ember.Select
-                                    contentBinding="categories"
-                                    valueBinding="newSiteCategory"
-                                    optionValuePath="content.slug"
-                                    optionLabelPath="content.niceName"}}
+                                {{view Ember.Select}}
                                 {{#view Ember.Button action="createSite" target="controller" classNames="btn"}}Go!{{/view}}
                             </div>
                         {{/if}}
