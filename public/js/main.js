@@ -1,27 +1,11 @@
 'use strict';
-/* Server Communication */
-var socket = io.connect('/');
 
 var Unminder = Ember.Application.create();
-
-socket.on('sites:all', function (data) {
-	var siteCollection = Unminder.Site.allSites;
-	siteCollection.clear();
-
-	$.each(data, function (i, site) {
-        siteCollection.addObject(Unminder.SiteInstance.create(site));
-    });
-});
-
-socket.on('sites:one', function (data) {
-    Unminder.Site.insert(Unminder.SiteInstance.create(data[0]));
-});
 
 /* Ember Classes */
 
 Unminder.Router.map(function () {
     this.route('sites');
-    this.resource('category', {path: '/category/:category_slug'});
 });
 
 /* Routes */
@@ -34,27 +18,37 @@ Unminder.IndexRoute = Ember.Route.extend({
 
 Unminder.SitesRoute = Ember.Route.extend({
     model: function () {
-        return Unminder.Site.all();
-    }
-});
-
-Unminder.CategoryRoute = Ember.Route.extend({
-    setupController: function (controller, model) {
-        var filtered_model = Unminder.Site.all();
-        console.log('setting up controller');
-        console.log(model);
-        controller.set('content', filtered_model);
-        controller.set('slug', model);
-    },
-    model: function (params) {
-        console.log('getting models for: ', params);
-        return params.category_slug;//Unminder.Site.all();//.filterProperty('title');
+        return Unminder.Site.find();
     }
 });
 
 /* Models */
 
-Unminder.Site = Ember.Object.extend();
+Unminder.Store = DS.Store.extend({
+    revision: 12
+});
+
+DS.RESTAdapter.reopen({
+    namespace: 'api'
+});
+
+
+Unminder.Site = DS.Model.extend({
+    title: DS.attr('string'),
+    image: DS.attr('string'),
+    url: DS.attr('string'),
+    backgroundStyle: function () {
+        if (!this.get('image')) {
+            return '';
+        }
+
+        var backgroundImage = this.get('image'),
+            styleString = 'background-image: url(' + backgroundImage + ')';
+        return styleString;
+    }.property('image')
+});
+
+/*Unminder.Site = Ember.Object.extend();
 
 Unminder.Site.reopenClass({
     allSites: [],
@@ -99,13 +93,12 @@ Unminder.CategoryList.reopenClass({
             this.allCategories.unshiftObject(obj);
         }
     }
-});
+});*/
 
 /* Controllers */
 
 Unminder.ApplicationController = Ember.Controller.extend({
     isAdding: false,
-    categories: Unminder.CategoryList.all(),
     startAddingSite: function () {
         this.set('isAdding', true);
     },
@@ -117,12 +110,6 @@ Unminder.ApplicationController = Ember.Controller.extend({
         if (url.substring(0, 7) !== 'http://') {
             url = 'http://' + url;
         }
-
-        this.set('newSite', '');
-        toAdd = {url: url, category: category};
-        socket.emit('create:sites', toAdd);
-
-        Unminder.Site.insert(Unminder.SiteInstance.create(toAdd));
     }
 });
 
@@ -135,15 +122,6 @@ Unminder.SitesController = Ember.ArrayController.extend({
     inCategory: function () {
         return this.filterProperty('category', 'comics')
     }.property('@each')
-});
-
-Unminder.CategoryController = Ember.ObjectController.extend({
-    content: [],
-    slug: null,
-    filteredSites: function () {
-        return this.get('content').filterProperty('category', this.get('slug'));
-    }.property('content.@each'),
-    foo: 'dis bar'
 });
 
 /* Views */
@@ -165,7 +143,3 @@ var categories = [
     {slug: 'performance', niceName: 'Frontend Performance Articles'},
     {slug: 'comics', niceName: 'Web Comics'}
 ];
-
-$.each(categories, function (i, val) {
-    Unminder.CategoryList.insert(Unminder.Category.create(val));
-});

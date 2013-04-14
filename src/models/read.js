@@ -12,6 +12,8 @@ function read (filter) {
     if (typeof filter !== 'string') {
         db.site.find().toArray(function (err, items) {
             items.map(function (el) {
+                el.id = el._id;
+                delete el.copy;
                 el.image = './media/screenshots/' + el.image + '.png';
                 return el;
             });
@@ -22,6 +24,8 @@ function read (filter) {
         db.site.find({url: filter}).toArray(function (err, items) {
             console.log('found by urlL', items.length);
             items.map(function (el) {
+                el.id = el._id;
+                delete el.copy;
                 el.image = './media/screenshots/' + el.image + '.png';
                 return el;
             });

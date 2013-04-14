@@ -7,8 +7,9 @@ function read (params) {
     if (params[0] === 'sites') {
         console.log('api read');
         crud_read.read().then(function (data) {
-
-            var json = JSON.stringify(data);
+            console.log('in api');
+            var response = {sites: data};
+            var json = JSON.stringify(response);
 
             defer.resolve(json);
         });
