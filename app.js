@@ -18,4 +18,10 @@ app.post('/api/sites', function (req, res) {
 	});
 });
 
+app.delete('/api/sites/:id', function (req, res) {
+	sites.destroy(req.params.id).then(function () {
+		res.send();
+	});
+});
+
 app.listen(8080);

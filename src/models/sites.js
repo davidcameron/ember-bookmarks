@@ -72,5 +72,20 @@ function create (data) {
     return deferred.promise;
 }
 
+function destroy (id) {
+    var deferred = Q.defer();
+    db.site.remove({_id: db.site.id(id)}, function (err, docs) {
+        if (err) {
+            console.log('destroy error: ', err);
+            deferred.reject(err);
+        } else {
+            console.log('destroy docs: ', docs);
+            deferred.resolve();
+        }
+    });
+    return deferred.promise;
+}
+
 exports.findAll = findAll;
 exports.create = create;
+exports.destroy = destroy;
