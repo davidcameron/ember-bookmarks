@@ -9,15 +9,13 @@
         <title>Unminder</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
-
-        <link rel="stylesheet" href="css/bootstrap.min.css">
         <style>
             body {
                 padding-top: 60px;
                 padding-bottom: 40px;
             }
         </style>
-        <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="css/bootstrap-3.css">
         <link rel="stylesheet" href="css/main.css">
 
         <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
@@ -25,33 +23,36 @@
 
         <!-- Templates -->
         <script type="text/x-handlebars" data-template-name="application">
-        <div class="container-fluid">
-            <div class="row-fluid">
-                <div class="span3">
-                    <div class="well sidebar-nav">
-                        <ul class="nav nav-list">
-                            <li class="nav-header">Categories</li>
-                        </ul>
-                    </div>
+        
+        <div class="row">
+            <div class="col-span-3">
+                <div class="panel">
+                    <div class="panel-heading">Categories</div>
+                    <p>Organize your sites into logical lists!</p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item list-group-item-active">Javascript<span class="badge">12</span></li>
+                        <li class="list-group-item">CSS<span class="badge">5</span></li>
+                        <li class="list-group-item">Business<span class="badge">24</span></li>
+                    </ul>
                 </div>
-                <div class="span9">
-                    <div>
-                        <h1>Unminder</h1>
-                        <br>
-                        <div class="input-append">
-                            {{view Ember.TextField valueBinding="newSite" action="createSite" placeholder="www.example.com"}}
+            </div>
+            <div class="col-span-9">
+                <div class="row">
+                    <h1 class="title-app">Unminder</h1>
+                    <br>
+                    <div class="input-append">
+                        {{view Ember.TextField valueBinding="newSite" action="createSite" placeholder="www.example.com" class="input-large col-span-4"}}
+                    </div>
+                    {{#if newSite}}
+                        <div class="form-inline">
+                            {{view Ember.Select}}
+                            {{#view Ember.Button action="createSite" target="controller" classNames="btn"}}Go!{{/view}}
                         </div>
-                        {{#if newSite}}
-                            <div class="form-inline">
-                                {{view Ember.Select}}
-                                {{#view Ember.Button action="createSite" target="controller" classNames="btn"}}Go!{{/view}}
-                            </div>
-                        {{/if}}
-                        <p>{{#linkTo "index"}}Home{{/linkTo}} {{#linkTo "sites"}}Sites{{/linkTo}}</p>
-                    </div>
-                    <div class="row-fluid collection">
-                        {{outlet}}
-                    </div>
+                    {{/if}}
+                    <p>{{#linkTo "index"}}Home{{/linkTo}} {{#linkTo "sites"}}Sites{{/linkTo}}</p>
+                </div>
+                <div class="row collection">
+                    {{outlet}}
                 </div>
             </div>
         </div>
@@ -73,7 +74,7 @@
 
         <script type="text/x-handlebars" data-template-name="sites">
             <h2>Site list:</h2>
-            <ul class="thumbnails site-list">
+            <div class="row site-list">
             {{#each site in controller}}
                 {{#view Unminder.SiteThumbnail}}
                 <div class="thumbnail" draggable="true">

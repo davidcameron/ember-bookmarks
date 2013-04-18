@@ -98,8 +98,8 @@ Unminder.SitesController = Ember.ArrayController.extend({
 /* Views */
 
 Unminder.SiteThumbnail = Ember.View.extend({
-	classNames: ['span4'],
-	tagName: 'li'
+	classNames: ['col-span-4'],
+	tagName: 'div'
 });
 
 Unminder.AddSiteButton = Ember.Button.extend(Ember.TargetActionSupport, {

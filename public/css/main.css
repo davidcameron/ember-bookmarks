@@ -17,11 +17,11 @@
 }
 
 /* Boostrap Fixes */
-.row-fluid.collection [class*="span"]:first-of-type {
+.row.collection [class*="col-span"]:first-of-type {
 	margin-left: 0;
 }
 
-.row-fluid.collection .span4:nth-of-type(3n+1) {
+.row.collection .col-span-4:nth-of-type(3n+1) {
 	margin-left: 0;
 }
 
@@ -64,4 +64,8 @@
     width: 26px;
     height: 26px;
     -webkit-animation: spin 1s infinite linear;
+}
+
+.title-app {
+    margin-top: 0;
 }
