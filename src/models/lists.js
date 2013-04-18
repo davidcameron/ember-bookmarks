@@ -1,15 +1,29 @@
 var mongo = require('mongoskin'),
-    BSON = mongo.BSONPure,
     Q = require("q"),
     db = mongo.db('localhost/unminder', {safe: false}),
     scraper = require('./fetch');
 
-db.collection('site').ensureIndex([['url', 1]], true);
-db.bind('site');
+db.collection('list');
+db.bind('list');
 
+// TODO fix this mess
 function findAll () {
     var deferred = Q.defer();
-    db.site.find().toArray(function (err, items) {
+    db.list.find().toArray(function (err, items) {
+        items.map(function (el) {
+            el.id = el._id;
+            return el;
+        });
+        deferred.resolve(items);
+    });
+
+    return deferred.promise;
+}
+
+function find (filter) {
+    var deferred = Q.defer();
+
+    db.list.find(filter).toArray(function (err, items) {
         items.map(function (el) {
             el.id = el._id;
             delete el.copy;
@@ -22,41 +36,24 @@ function findAll () {
     return deferred.promise;
 }
 
-function findOne (id) {
-    var deferred = Q.defer();
-
-    //id = '516e52bb28d4867da7000000';
-    
-    console.log('findOne BSON id:', new BSON.ObjectID(id));
-    db.site.find({_id: id}).toArray(function (err, items) {
-        item = items[0];
-        item.id = item._id;
-        delete item.copy;
-        item.image = './media/screenshots/' + item.image + '.png';
-        deferred.resolve(item);
-    });
-
-    return deferred.promise;
-}
-
 function create (data) {
     var deferred = Q.defer();
-
     data = data.site;
-    var url = data.url;
 
-    if (url.substring(0, 7) !== 'http://') {
-        url = 'http://' + url;
-    }
-
-
-    db.site.insert({url: url, category: data.category, _id: data.id}, function (err, docs) {
+    db.list.insert(data, function (err, docs) {
+        console.log(docs);
         if (err) {
+            console.log('insert error', err);
             deferred.reject(err);
         } else {
+
             scraper.getSite(url).then(function (data) {
-                db.site.update({_id: docs[0]._id}, {$set: {title: data.title, copy: data.copy, image: data.image}}, function (err) {
+                console.log("getSite resolved");
+                console.log("data: ", data);
+                db.list.update({_id: docs[0]._id}, {$set: {title: data.title, copy: data.copy, image: data.image}}, function (err) {
+                    console.log("update callback");
                     if (err) {
+                        console.log(err);
                         create.Deferred.reject(err);
                     } else {
                         deferred.resolve(docs);
@@ -70,12 +67,13 @@ function create (data) {
 }
 
 function destroy (id) {
-    console.log('destroy API id:', id);
     var deferred = Q.defer();
-    db.site.remove({_id: id}, function (err, docs) {
+    db.list.remove({_id: db.list.id(id)}, function (err, docs) {
         if (err) {
+            console.log('destroy error: ', err);
             deferred.reject(err);
         } else {
+            console.log('destroy docs: ', docs);
             deferred.resolve();
         }
     });
@@ -83,6 +81,5 @@ function destroy (id) {
 }
 
 exports.findAll = findAll;
-exports.findOne = findOne;
 exports.create = create;
 exports.destroy = destroy;

@@ -1,5 +1,23 @@
 'use strict';
 
+var socket = io.connect();
+
+socket.on('connected', function () {
+    console.log('emitted connected');
+});
+
+socket.on('posting', function () {
+    console.log('emitted posting');
+});
+
+socket.on('create:site', function (data) {
+    console.log('create:site', data);
+    var id = data[0]._id;
+    console.log('id:', id);
+    Unminder.Site.find(id).reload();
+    console.log(Unminder.Site.find(id));
+});
+
 var Unminder = Ember.Application.create();
 
 /* Ember Classes */
@@ -63,9 +81,9 @@ Unminder.ApplicationController = Ember.Controller.extend({
             url = 'http://' + url;
         }
 
-        console.log('url: ', url);
-
-        Unminder.Site.createRecord({url: url});
+        // Override the normal ID Ember Data makes to work w/ Mongo
+        var id = new ObjectId().toString();
+        Unminder.Site.createRecord({url: url, id: id});
         this.get('store').commit();
     }
 });
