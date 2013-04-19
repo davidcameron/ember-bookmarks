@@ -9,12 +9,6 @@
         <title>Unminder</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
-        <style>
-            body {
-                padding-top: 60px;
-                padding-bottom: 40px;
-            }
-        </style>
         <link rel="stylesheet" href="css/bootstrap-3.css">
         <link rel="stylesheet" href="css/main.css">
 
@@ -23,7 +17,32 @@
 
         <!-- Templates -->
         <script type="text/x-handlebars" data-template-name="application">
-        
+        <div class="container">
+
+        <div class="navbar">
+            <div class="container">
+
+                <!-- .navbar-toggle is used as the toggle for collapsed navbar content -->
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                </button>
+
+                <!-- Be sure to leave the brand out there if you want it shown -->
+                <a class="navbar-brand" href="#">Unminder</a>
+
+                <!-- Place everything within .navbar-collapse to hide it until above 768px -->
+                <div class="nav-collapse collapse navbar-responsive-collapse">
+                    <ul class="nav">
+                        <li>{{#linkTo "index"}}Home{{/linkTo}}</li>
+                        <li>{{#linkTo "sites"}}Sites{{/linkTo}}</li>
+                    </ul>
+                </div><!-- /.nav-collapse -->
+            </div><!-- /.container -->
+        </div><!-- /.navbar -->
+
+
         <div class="row">
             <div class="col-span-3">
                 <div class="panel">
@@ -38,23 +57,21 @@
             </div>
             <div class="col-span-9">
                 <div class="row">
-                    <h1 class="title-app">Unminder</h1>
+                    <h1 class="title-app col-span-12">Unminder</h1>
                     <br>
-                    <div class="input-append">
+                    <div class="input-append col-span-12">
                         {{view Ember.TextField valueBinding="newSite" action="createSite" placeholder="www.example.com" class="input-large col-span-4"}}
                     </div>
                     {{#if newSite}}
-                        <div class="form-inline">
-                            {{view Ember.Select}}
+                        <div class="form-inline col-span-12 form-toggle">
+                            {{view Ember.Select class="col-span-4"}}
                             {{#view Ember.Button action="createSite" target="controller" classNames="btn"}}Go!{{/view}}
                         </div>
                     {{/if}}
-                    <p>{{#linkTo "index"}}Home{{/linkTo}} {{#linkTo "sites"}}Sites{{/linkTo}}</p>
                 </div>
-                <div class="row collection">
-                    {{outlet}}
-                </div>
+                {{outlet}}
             </div>
+        </div>
         </div>
         </script>
 
@@ -73,29 +90,33 @@
         </script>
 
         <script type="text/x-handlebars" data-template-name="sites">
-            <h2>Site list:</h2>
-            <div class="row site-list">
-            {{#each site in controller}}
-                {{#view Unminder.SiteThumbnail}}
-                <div class="thumbnail" draggable="true">
+            <div class="row">
+                <h2 class="col-span-12">Site list:</h2>
+            </div>
+            <div class="row">
+                <div class="col-span-12 site-list">
+                {{#each site in controller}}
+                    {{#view Unminder.SiteThumbnail}}
+                    <div class="thumbnail" draggable="true">
 
-                    <button data-toggle="tooltip" title="remove" {{action delete site}} class="close">&times;</button>
-                    <a target="_blank" {{bindAttr href="site.url"}}>
-                        <h4 class="site-title">{{site.title}}</h4>
-                    </a>
+                        <button data-toggle="tooltip" title="remove" {{action delete site}} class="close">&times;</button>
+                        <a target="_blank" {{bindAttr href="site.url"}}>
+                            <h4 class="site-title">{{site.title}}</h4>
+                        </a>
 
-                    <a target="_blank" {{bindAttr href="site.url"}} class="thumbnail-image-container" draggable="false">
-                        <div class="thumbnail-image" {{bindAttr style="site.backgroundStyle"}}>
-                            {{#unless site.image}}
-                            {{view Unminder.SpinnerView}}
-                            {{/unless}}
-                        </div>
-                    </a>
-                    <p>Category: {{site.category}}</p>
+                        <a target="_blank" {{bindAttr href="site.url"}} class="thumbnail-image-container" draggable="false">
+                            <div class="thumbnail-image" {{bindAttr style="site.backgroundStyle"}}>
+                                {{#unless site.image}}
+                                {{view Unminder.SpinnerView}}
+                                {{/unless}}
+                            </div>
+                        </a>
+                        <p>Category: {{site.category}}</p>
+                    </div>
+                    {{/view}}
+                {{/each}}
                 </div>
-                {{/view}}
-            {{/each}}
-            </ul>
+            </div>
         </script>
 
         <script type="text/x-handlebars" data-template-name="category">

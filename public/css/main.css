@@ -7,6 +7,10 @@
 	text-overflow: ellipsis;
 }
 
+.thumbnail {
+    margin-bottom: 20px;
+}
+
 .thumbnail-image-container {
 	position: relative;
 }
@@ -17,12 +21,12 @@
 }
 
 /* Boostrap Fixes */
-.row.collection [class*="col-span"]:first-of-type {
-	margin-left: 0;
+.site-list [class*="col-span"]:first-of-type {
+	padding-left: 0;
 }
 
-.row.collection .col-span-4:nth-of-type(3n+1) {
-	margin-left: 0;
+.site-list .col-span-4:nth-of-type(3n+1) {
+	padding-left: 0;
 }
 
 /* Animation keyframes - you need to add prefixes */
@@ -68,4 +72,12 @@
 
 .title-app {
     margin-top: 0;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.form-toggle {
+    margin-top: 10px;
 }
