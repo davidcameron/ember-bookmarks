@@ -1,12 +1,11 @@
 var mongo = require('mongoskin'),
+    BSON = mongo.BSONPure,
     Q = require("q"),
     db = mongo.db('localhost/unminder', {safe: false}),
-    scraper = require('./fetch');
 
 db.collection('list');
 db.bind('list');
 
-// TODO fix this mess
 function findAll () {
     var deferred = Q.defer();
     db.list.find().toArray(function (err, items) {
@@ -20,17 +19,14 @@ function findAll () {
     return deferred.promise;
 }
 
-function find (filter) {
+function findOne (id) {
     var deferred = Q.defer();
-
-    db.list.find(filter).toArray(function (err, items) {
-        items.map(function (el) {
-            el.id = el._id;
-            delete el.copy;
-            el.image = './media/screenshots/' + el.image + '.png';
-            return el;
-        });
-        deferred.resolve(items);
+    
+    console.log('findOne list');
+    db.site.find({_id: id}).toArray(function (err, items) {
+        item = items[0];
+        item.id = item._id;
+        deferred.resolve(item);
     });
 
     return deferred.promise;
@@ -38,28 +34,13 @@ function find (filter) {
 
 function create (data) {
     var deferred = Q.defer();
-    data = data.site;
+    console.log(data);
 
     db.list.insert(data, function (err, docs) {
-        console.log(docs);
         if (err) {
-            console.log('insert error', err);
             deferred.reject(err);
         } else {
-
-            scraper.getSite(url).then(function (data) {
-                console.log("getSite resolved");
-                console.log("data: ", data);
-                db.list.update({_id: docs[0]._id}, {$set: {title: data.title, copy: data.copy, image: data.image}}, function (err) {
-                    console.log("update callback");
-                    if (err) {
-                        console.log(err);
-                        create.Deferred.reject(err);
-                    } else {
-                        deferred.resolve(docs);
-                    }
-                });
-            });
+            deferred.resolve(docs);
         }
     });
 
@@ -68,12 +49,10 @@ function create (data) {
 
 function destroy (id) {
     var deferred = Q.defer();
-    db.list.remove({_id: db.list.id(id)}, function (err, docs) {
+    db.site.remove({_id: id}, function (err, docs) {
         if (err) {
-            console.log('destroy error: ', err);
             deferred.reject(err);
         } else {
-            console.log('destroy docs: ', docs);
             deferred.resolve();
         }
     });
@@ -81,5 +60,6 @@ function destroy (id) {
 }
 
 exports.findAll = findAll;
+exports.findOne = findOne;
 exports.create = create;
 exports.destroy = destroy;

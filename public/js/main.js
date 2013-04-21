@@ -55,6 +55,7 @@ Unminder.Site = DS.Model.extend({
     title: DS.attr('string'),
     image: DS.attr('string'),
     url: DS.attr('string'),
+    list: DS.belongsTo('Unminder.List'),
     backgroundStyle: function () {
         if (!this.get('image')) {
             return '';
@@ -64,6 +65,11 @@ Unminder.Site = DS.Model.extend({
             styleString = 'background-image: url(' + backgroundImage + ')';
         return styleString;
     }.property('image')
+});
+
+Unminder.List = DS.Model.extend({
+    title: DS.attr('string'),
+    sites: DS.hasMany('Unminder.Site')
 });
 
 /* Controllers */
