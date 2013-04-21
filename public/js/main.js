@@ -23,10 +23,16 @@ var Unminder = Ember.Application.create();
 /* Ember Classes */
 
 Unminder.Router.map(function () {
-    this.route('sites');
+    this.resource('sites', {path: '/sites'});
 });
 
 /* Routes */
+
+Unminder.ApplicationRoute = Ember.Route.extend({
+    model: function () {
+        return Unminder.List.find();
+    }
+});
 
 Unminder.IndexRoute = Ember.Route.extend({
     setupController: function (controller) {
@@ -74,11 +80,7 @@ Unminder.List = DS.Model.extend({
 
 /* Controllers */
 
-Unminder.ApplicationController = Ember.Controller.extend({
-    isAdding: false,
-    startAddingSite: function () {
-        this.set('isAdding', true);
-    },
+Unminder.ApplicationController = Ember.ArrayController.extend({
     createSite: function () {
         var url = this.get('newSite'),
             category = this.get('newSiteCategory');
@@ -91,6 +93,16 @@ Unminder.ApplicationController = Ember.Controller.extend({
         var id = new ObjectId().toString();
         Unminder.Site.createRecord({url: url, id: id});
         this.get('store').commit();
+
+        this.set('newSite', '');
+    },
+    createList: function () {
+        var listName = this.get('newList');
+        var id = new ObjectId().toString();
+        Unminder.List.createRecord({title: listName, id: id});
+        this.get('store').commit();
+
+        this.set('newList', '');
     }
 });
 
@@ -113,10 +125,3 @@ Unminder.AddSiteButton = Ember.Button.extend(Ember.TargetActionSupport, {
 });
 
 Unminder.SpinnerView = Ember.View.extend({templateName: 'spinner'});
-
-/* Test Content */
-var categories = [
-    {slug: 'mvc', niceName: 'JavaScript MVC Frameworks'},
-    {slug: 'performance', niceName: 'Frontend Performance Articles'},
-    {slug: 'comics', niceName: 'Web Comics'}
-];

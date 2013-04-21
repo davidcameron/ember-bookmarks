@@ -1,18 +1,20 @@
 var mongo = require('mongoskin'),
     BSON = mongo.BSONPure,
     Q = require("q"),
-    db = mongo.db('localhost/unminder', {safe: false}),
+    db = mongo.db('localhost/unminder', {safe: false});
 
 db.collection('list');
 db.bind('list');
 
 function findAll () {
+
     var deferred = Q.defer();
     db.list.find().toArray(function (err, items) {
         items.map(function (el) {
             el.id = el._id;
             return el;
         });
+        console.log(items);
         deferred.resolve(items);
     });
 
@@ -22,7 +24,7 @@ function findAll () {
 function findOne (id) {
     var deferred = Q.defer();
     
-    console.log('findOne list');
+
     db.site.find({_id: id}).toArray(function (err, items) {
         item = items[0];
         item.id = item._id;
@@ -34,7 +36,8 @@ function findOne (id) {
 
 function create (data) {
     var deferred = Q.defer();
-    console.log(data);
+
+    data = data.list;
 
     db.list.insert(data, function (err, docs) {
         if (err) {

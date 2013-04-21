@@ -4,10 +4,10 @@ var express = require('express'),
     server = http.createServer(app),
     io = require('socket.io').listen(server),
     sites = require('./src/models/sites'),
-    lists = require('./src/models/sites'),
+    lists = require('./src/models/lists'),
     theSocket = {};
 
-//io.set('log level', 2);
+io.set('log level', 2);
 
 app.use(express.bodyParser());
 app.use(express.static(__dirname + '/public'));
@@ -53,8 +53,14 @@ app.get('/api/lists', function (req, res) {
 });
 
 app.post('/api/lists', function (req, res) {    
-    sites.create(req.body).then(function (data) {
+    lists.create(req.body).then(function (data) {
         res.send({lists: data});
+    });
+});
+
+app.delete('/api/lists/:id', function (req, res) {
+    lists.destroy(req.params.id).then(function () {
+        res.send();
     });
 });
 
