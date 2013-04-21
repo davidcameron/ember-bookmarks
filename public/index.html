@@ -52,6 +52,7 @@
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">
                                 {{view Ember.TextField valueBinding="newList" action="createList" placeholder="List Name"}}
+                                </li>
                             {{#each list in controller}}
                                 <li class="list-group-item">{{list.title}}</li>
                             {{/each}}
@@ -68,7 +69,10 @@
                             </div>
                             {{#if newSite}}
                                 <div class="form-inline col-span-12 form-toggle">
-                                    {{view Ember.Select class="col-span-4"}}
+                                    {{view Ember.Select class="col-span-4"
+                                        contentBinding="controller.content"
+                                        optionLabelPath="content.title"
+                                        }}
                                     {{#view Ember.Button action="createSite" target="controller" classNames="btn"}}Go!{{/view}}
                                 </div>
                             {{/if}}
