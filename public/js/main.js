@@ -83,7 +83,8 @@ Unminder.List = DS.Model.extend({
 Unminder.ApplicationController = Ember.ArrayController.extend({
     createSite: function () {
         var url = this.get('newSite'),
-            category = this.get('newSiteCategory');
+            list = this.get('newSiteList');
+            console.log(list);
 
         if (url.substring(0, 7) !== 'http://') {
             url = 'http://' + url;
@@ -91,7 +92,7 @@ Unminder.ApplicationController = Ember.ArrayController.extend({
 
         // Override the normal ID Ember Data makes to work w/ Mongo
         var id = new ObjectId().toString();
-        Unminder.Site.createRecord({url: url, id: id});
+        Unminder.Site.createRecord({url: url, id: id, list: list});
         this.get('store').commit();
 
         this.set('newSite', '');

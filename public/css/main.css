@@ -81,3 +81,10 @@
 .form-toggle {
     margin-top: 10px;
 }
+
+.brand-callout {
+    padding: 0 2px;
+    background-color: #95cd06;
+    border-radius: 1px;
+    color: white;
+}

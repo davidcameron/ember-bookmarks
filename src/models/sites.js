@@ -50,7 +50,7 @@ function create (data) {
     }
 
 
-    db.site.insert({url: url, category: data.category, _id: data.id}, function (err, docs) {
+    db.site.insert({url: url, list_id: data.list_id, _id: data.id}, function (err, docs) {
         if (err) {
             deferred.reject(err);
         } else {

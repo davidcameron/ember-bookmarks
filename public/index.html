@@ -62,7 +62,7 @@
 
                     <div class="col-span-9">
                         <div class="row">
-                            <h1 class="title-app col-span-12">Unminder</h1>
+                            <h1 class="title-app col-span-12"><span class="brand-callout">Un</span>minder</h1>
                             <br>
                             <div class="input-append col-span-12">
                                 {{view Ember.TextField valueBinding="newSite" action="createSite" placeholder="www.example.com" class="input-large col-span-4"}}
@@ -72,6 +72,8 @@
                                     {{view Ember.Select class="col-span-4"
                                         contentBinding="controller.content"
                                         optionLabelPath="content.title"
+                                        optionValuePath="content.id"
+                                        selectionBinding="controller.newSiteList"
                                         }}
                                     {{#view Ember.Button action="createSite" target="controller" classNames="btn"}}Go!{{/view}}
                                 </div>
