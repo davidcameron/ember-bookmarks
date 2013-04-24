@@ -93,6 +93,10 @@ Unminder.ApplicationController = Ember.ArrayController.extend({
         // Override the normal ID Ember Data makes to work w/ Mongo
         var id = new ObjectId().toString();
         Unminder.Site.createRecord({url: url, id: id, list: list});
+        //list.get('sites').pushObject(Unminder.Site.find(id));
+        //list.set('title', 'Updated');
+        //console.log(list.get('sites'));
+
         this.get('store').commit();
 
         this.set('newSite', '');
@@ -101,6 +105,7 @@ Unminder.ApplicationController = Ember.ArrayController.extend({
         var listName = this.get('newList');
         var id = new ObjectId().toString();
         Unminder.List.createRecord({title: listName, id: id});
+
         this.get('store').commit();
 
         this.set('newList', '');

@@ -52,10 +52,22 @@ app.get('/api/lists', function (req, res) {
     });
 });
 
+app.get('/api/lists/:id', function (req, res) {
+    console.log('get list by id!');
+    
+    list.findOne(req.params.id).then(function (data) {
+        res.send({list: data});
+    });
+});
+
 app.post('/api/lists', function (req, res) {    
     lists.create(req.body).then(function (data) {
         res.send({lists: data});
     });
+});
+
+app.put('/api/lists', function (req, res) {    
+    res.send('Got the put!');
 });
 
 app.delete('/api/lists/:id', function (req, res) {

@@ -7,6 +7,9 @@ var mongo = require('mongoskin'),
 db.collection('site').ensureIndex([['url', 1]], true);
 db.bind('site');
 
+db.collection('list');
+db.bind('list');
+
 function findAll () {
     var deferred = Q.defer();
     db.site.find().toArray(function (err, items) {
@@ -72,11 +75,19 @@ function create (data) {
 function destroy (id) {
     console.log('destroy API id:', id);
     var deferred = Q.defer();
+
+    db.site.find({_id: id}).toArray(function (err, items) {
+        var data = items[0];
+
+    });
+
     db.site.remove({_id: id}, function (err, docs) {
         if (err) {
             deferred.reject(err);
         } else {
+            console.log(docs);
             deferred.resolve();
+
         }
     });
     return deferred.promise;

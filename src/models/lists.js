@@ -6,6 +6,9 @@ var mongo = require('mongoskin'),
 db.collection('list');
 db.bind('list');
 
+db.collection('site');
+db.bind('site');
+
 function findAll () {
 
     var deferred = Q.defer();
@@ -14,18 +17,53 @@ function findAll () {
             el.id = el._id;
             return el;
         });
-        console.log(items);
+
+        joinSites(items).then(deferred.resolve);
+    });
+
+    return deferred.promise;
+}
+
+function joinSites(items) {
+    var deferred = Q.defer();
+    var sitesDeferredArray = [];
+
+    for(x in items) {
+        sitesDeferredArray[x] = Q.defer();
+        var list_id = items[x].id;
+
+        // Pulls sites if you leave out the query hash
+        db.site.find({list_id: list_id}).toArray(function (err, sites) {
+            var siteArray = [];
+
+            for (y in sites) {
+                siteArray.push(sites[y].list_id);
+            }
+
+            sitesDeferredArray[x].resolve(siteArray);
+            
+        });
+    }
+
+    Q.allResolved(sitesDeferredArray).then(function (promises) {
+        promises.forEach(function (promise) {
+            if (promise.isFulfilled()) {
+                items[x].sites = promise.valueOf();
+            }
+        });
+
         deferred.resolve(items);
     });
 
     return deferred.promise;
+
 }
 
 function findOne (id) {
     var deferred = Q.defer();
     
 
-    db.site.find({_id: id}).toArray(function (err, items) {
+    db.list.find({_id: id}).toArray(function (err, items) {
         item = items[0];
         item.id = item._id;
         deferred.resolve(item);

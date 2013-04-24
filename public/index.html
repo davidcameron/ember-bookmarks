@@ -8,9 +8,15 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>Unminder</title>
         <meta name="description" content="">
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700' rel='stylesheet' type='text/css'>
+
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="css/bootstrap-3.css">
         <link rel="stylesheet" href="css/main.css">
+
 
         <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
@@ -63,10 +69,13 @@
                     <div class="col-span-9">
                         <div class="row">
                             <h1 class="title-app col-span-12"><span class="brand-callout">Un</span>minder</h1>
-                            <br>
+                        </div>
+                        <div class="row">
                             <div class="input-append col-span-12">
-                                {{view Ember.TextField valueBinding="newSite" action="createSite" placeholder="www.example.com" class="input-large col-span-4"}}
+                                {{view Ember.TextField valueBinding="newSite" action="createSite" placeholder="www.example.com" class="col-span-4"}}
                             </div>
+                        </div>
+                        <div class="row">
                             {{#if newSite}}
                                 <div class="form-inline col-span-12 form-toggle">
                                     {{view Ember.Select class="col-span-4"

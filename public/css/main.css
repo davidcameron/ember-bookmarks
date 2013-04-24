@@ -1,5 +1,6 @@
 .site-title {
 	font-size: 18px;
+    font-weight: 300;
 	line-height: 18px;
 	height: 20px;
 	overflow: hidden;
@@ -72,6 +73,8 @@
 
 .title-app {
     margin-top: 0;
+    margin-bottom: 20px;
+    font-weight: 300;
 }
 
 .navbar {
@@ -87,4 +90,8 @@
     background-color: #95cd06;
     border-radius: 1px;
     color: white;
+}
+
+body {
+    font-family: "Open Sans";
 }
