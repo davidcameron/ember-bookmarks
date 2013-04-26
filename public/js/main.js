@@ -104,7 +104,7 @@ Unminder.ApplicationController = Ember.ArrayController.extend({
     createList: function () {
         var listName = this.get('newList');
         var id = new ObjectId().toString();
-        Unminder.List.createRecord({title: listName, id: id});
+        Unminder.List.createRecord({title: listName, id: id, _id: id});
 
         this.get('store').commit();
 

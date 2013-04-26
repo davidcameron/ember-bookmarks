@@ -30,15 +30,20 @@ function joinSites(items) {
 
     for(x in items) {
         sitesDeferredArray[x] = Q.defer();
-        var list_id = items[x].id;
-
+        var list_id = items[x]._id;
+        console.log(' ');
+        console.log(list_id);
+        console.log(items[x].id);
+        console.log(' ');
         // Pulls sites if you leave out the query hash
-        db.site.find({list_id: list_id}).toArray(function (err, sites) {
+        console.log(list_id);
+        db.site.find({list_id: items[x]._id}).toArray(function (err, sites) {
             var siteArray = [];
 
             for (y in sites) {
                 siteArray.push(sites[y].list_id);
             }
+            console.log(siteArray);
 
             sitesDeferredArray[x].resolve(siteArray);
             
