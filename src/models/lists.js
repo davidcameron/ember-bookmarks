@@ -1,70 +1,45 @@
-var mongo = require('mongoskin'),
-    BSON = mongo.BSONPure,
-    Q = require("q"),
-    db = mongo.db('localhost/unminder', {safe: false});
+var fastLegsBase = require('FastLegS'),
+    fastLegs = new fastLegsBase('pg'),
+    Q = require("q");
 
-db.collection('list');
-db.bind('list');
+var connectionParams = {
+    user: 'postgres',
+    password: 'darwin123',
+    database: 'unminder',
+    host: 'localhost',
+    port: '5432'
+};
 
-db.collection('site');
-db.bind('site');
+fastLegs.connect(connectionParams);
+
+var List = fastLegs.Base.extend({
+    tableName : 'lists',
+    primaryKey : 'id'
+});
+
+var Site = fastLegs.Base.extend({
+    tableName : 'sites',
+    primaryKey : 'id'
+});
 
 function findAll () {
-
     var deferred = Q.defer();
-    db.list.find().toArray(function (err, items) {
-        items.map(function (el) {
-            el.id = el._id;
-            return el;
-        });
-
-        joinSites(items).then(deferred.resolve);
+    List.find({}, function (err, results) {
+        if (err) {
+            deferred.reject(err);
+        } else {
+            deferred.resolve(results);
+        }
     });
 
     return deferred.promise;
-}
-
-function joinSites(items) {
-    var deferred = Q.defer();
-    var sitesDeferredArray = [];
-
-    for(x in items) {
-        sitesDeferredArray[x] = Q.defer();
-        var list_id = items[x]._id;
-        // Pulls sites if you leave out the query hash
-        db.site.find({list_id: items[x]._id}).toArray(function (err, sites) {
-            var siteArray = [];
-
-            for (y in sites) {
-                siteArray.push(sites[y].list_id);
-            }
-
-            sitesDeferredArray[x].resolve(siteArray);
-            
-        });
-    }
-
-    Q.allResolved(sitesDeferredArray).then(function (promises) {
-        promises.forEach(function (promise) {
-            if (promise.isFulfilled()) {
-                items[x].sites = promise.valueOf();
-            }
-        });
-
-        deferred.resolve(items);
-    });
-
-    return deferred.promise;
-
 }
 
 function findOne (id) {
     var deferred = Q.defer();
     
-
-    db.list.find({_id: id}).toArray(function (err, items) {
-        item = items[0];
-        item.id = item._id;
+    List.find({id: id}, function (err, results) {
+        item = results.rows[0];
         deferred.resolve(item);
     });
 
@@ -76,11 +51,13 @@ function create (data) {
 
     data = data.list;
 
-    db.list.insert(data, function (err, docs) {
+    List.create({
+        title: data.title
+    }, function (err, results) {
         if (err) {
             deferred.reject(err);
         } else {
-            deferred.resolve(docs);
+            deferred.resolve();
         }
     });
 
@@ -89,13 +66,15 @@ function create (data) {
 
 function destroy (id) {
     var deferred = Q.defer();
-    db.site.remove({_id: id}, function (err, docs) {
+
+    List.destroy({id: id}, function (err, results) {
         if (err) {
             deferred.reject(err);
         } else {
             deferred.resolve();
         }
     });
+
     return deferred.promise;
 }
 

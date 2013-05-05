@@ -21,7 +21,6 @@ var Site = fastLegs.Base.extend({
 function findAll () {
     var deferred = Q.defer();
     Site.find({}, function (err, results) {
-        console.log(results);
         if (results) {
             results.map(function (el) {
                 delete el.copy;
