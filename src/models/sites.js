@@ -1,25 +1,38 @@
-var mongo = require('mongoskin'),
-    BSON = mongo.BSONPure,
+var fastLegsBase = require('FastLegS'),
+    fastLegs = new fastLegsBase('pg'),
     Q = require("q"),
-    db = mongo.db('localhost/unminder', {safe: false}),
     scraper = require('./fetch');
 
-db.collection('site').ensureIndex([['url', 1]], true);
-db.bind('site');
+var connectionParams = {
+    user: 'postgres',
+    password: 'darwin123',
+    database: 'unminder',
+    host: 'localhost',
+    port: '5432'
+};
 
-db.collection('list');
-db.bind('list');
+fastLegs.connect(connectionParams);
+
+var Site = fastLegs.Base.extend({
+    tableName : 'sites',
+    primaryKey : 'id'
+});
 
 function findAll () {
     var deferred = Q.defer();
-    db.site.find().toArray(function (err, items) {
-        items.map(function (el) {
-            el.id = el._id;
-            delete el.copy;
-            el.image = './media/screenshots/' + el.image + '.png';
-            return el;
-        });
-        deferred.resolve(items);
+    Site.find({}, function (err, results) {
+        console.log(results);
+        if (results) {
+            results.map(function (el) {
+                delete el.copy;
+                el.image = './media/screenshots/' + el.image + '.png';
+                return el;
+            });
+            deferred.resolve(results);
+        } else {
+            deferred.resolve({});
+        }
+        
     });
 
     return deferred.promise;
@@ -27,13 +40,9 @@ function findAll () {
 
 function findOne (id) {
     var deferred = Q.defer();
-
-    //id = '516e52bb28d4867da7000000';
     
-    console.log('findOne BSON id:', new BSON.ObjectID(id));
-    db.site.find({_id: id}).toArray(function (err, items) {
-        item = items[0];
-        item.id = item._id;
+    Site.find({id: id}, function (err, results) {
+        item = results.rows[0];
         delete item.copy;
         item.image = './media/screenshots/' + item.image + '.png';
         deferred.resolve(item);
@@ -52,19 +61,29 @@ function create (data) {
         url = 'http://' + url;
     }
 
-
-    db.site.insert({url: url, list_id: data.list_id, _id: data.id}, function (err, docs) {
+    Site.create({
+        url: url,
+        list_id: data.list_id,
+    }, function (err, results) {
         if (err) {
             deferred.reject(err);
         } else {
-            scraper.getSite(url).then(function (data) {
-                db.site.update({_id: docs[0]._id}, {$set: {title: data.title, copy: data.copy, image: data.image}}, function (err) {
-                    if (err) {
-                        create.Deferred.reject(err);
-                    } else {
-                        deferred.resolve(docs);
+            var site = results.rows[0];
+
+            scraper.getSite(url)
+            .then(function (data) {
+                Site.update({id: site.id}, {title: data.title, copy: data.copy, image: data.image},
+                    function (err, result) {
+                        if (err) {
+                            deferred.reject(err);
+                        } else {
+                            Site.find({id: site.id}, function (err, results) {
+                                results[0].image = './media/screenshots/' + results[0].image + '.png';
+                                deferred.resolve(results[0]);
+                            });
+                        }
                     }
-                });
+                );
             });
         }
     });
@@ -73,23 +92,16 @@ function create (data) {
 }
 
 function destroy (id) {
-    console.log('destroy API id:', id);
     var deferred = Q.defer();
 
-    db.site.find({_id: id}).toArray(function (err, items) {
-        var data = items[0];
-
-    });
-
-    db.site.remove({_id: id}, function (err, docs) {
+    Site.destroy({id: id}, function (err, results) {
         if (err) {
             deferred.reject(err);
         } else {
-            console.log(docs);
-            deferred.resolve();
-
+            deferred.resolve(results);
         }
     });
+
     return deferred.promise;
 }
 

@@ -17,6 +17,7 @@ app.use('/media', express.static(__dirname + '/media'));
 
 app.get('/api/sites', function (req, res) {
     sites.findAll().then(function (data) {
+        console.log(data);
         res.send({sites: data});
     });
 });
@@ -32,9 +33,9 @@ app.get('/api/sites/:id', function (req, res) {
 
 app.post('/api/sites', function (req, res) {    
     sites.create(req.body).then(function (data) {
-        theSocket.emit('create:site', data);
+        res.send({site: data});
     });
-    res.send({site: req.body});
+    
 });
 
 app.delete('/api/sites/:id', function (req, res) {

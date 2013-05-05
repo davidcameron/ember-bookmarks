@@ -12,7 +12,7 @@ socket.on('posting', function () {
 
 socket.on('create:site', function (data) {
     console.log('create:site', data);
-    var id = data[0]._id;
+    var id = data[0].id;
     console.log('id:', id);
     Unminder.Site.find(id).reload();
     console.log(Unminder.Site.find(id));
@@ -90,12 +90,7 @@ Unminder.ApplicationController = Ember.ArrayController.extend({
             url = 'http://' + url;
         }
 
-        // Override the normal ID Ember Data makes to work w/ Mongo
-        var id = new ObjectId().toString();
-        Unminder.Site.createRecord({url: url, id: id, list: list});
-        //list.get('sites').pushObject(Unminder.Site.find(id));
-        //list.set('title', 'Updated');
-        //console.log(list.get('sites'));
+        Unminder.Site.createRecord({url: url, list: list});
 
         this.get('store').commit();
 
@@ -104,7 +99,7 @@ Unminder.ApplicationController = Ember.ArrayController.extend({
     createList: function () {
         var listName = this.get('newList');
         var id = new ObjectId().toString();
-        Unminder.List.createRecord({title: listName, id: id, _id: id});
+        Unminder.List.createRecord({title: listName, id: id});
 
         this.get('store').commit();
 
