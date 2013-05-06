@@ -12,25 +12,41 @@ var connectionParams = {
 
 fastLegs.connect(connectionParams);
 
-var List = fastLegs.Base.extend({
-    tableName : 'lists',
-    primaryKey : 'id'
-});
-
 var Site = fastLegs.Base.extend({
     tableName : 'sites',
     primaryKey : 'id'
 });
 
+var List = fastLegs.Base.extend({
+    tableName : 'lists',
+    primaryKey : 'id',
+    many: [{'sites': Site, joinOn: 'list_id'}]
+});
+
 function findAll () {
     var deferred = Q.defer();
-    List.find({}, function (err, results) {
-        if (err) {
-            deferred.reject(err);
-        } else {
-            deferred.resolve(results);
+    List.find(
+        {},
+        {include: {sites: {only: ['id']}}},
+        function (err, results) {
+            if (err) {
+                deferred.reject(err);
+            } else {
+                results.map(function (el) {
+                    el.site_ids = [];
+
+                    el.sites.forEach(function (site) {
+                        el.site_ids.push(site.id);
+                    });
+
+                    delete el.sites;
+                    return el;
+                });
+
+                deferred.resolve(results);
+            }
         }
-    });
+    );
 
     return deferred.promise;
 }
