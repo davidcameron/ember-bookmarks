@@ -54,15 +54,26 @@ function findAll () {
 function findOne (id) {
     var deferred = Q.defer();
     
-    List.find({id: id}, function (err, results) {
-        console.log(id, err, results);
-        if (err) {
-            deferred.reject(err);
-        } else {
-            item = results[0];
-            deferred.resolve(item);
+    List.find(
+        {},
+        {include: {sites: {only: ['id']}}},
+        function (err, result) {
+            if (err) {
+                deferred.reject(err);
+            } else {
+                var item = result[0];
+                item.site_ids = [];
+
+                item.sites.forEach(function (site) {
+                    item.site_ids.push(site.id);
+                });
+
+                delete item.sites;
+
+                deferred.resolve(item);
+            }
         }
-    });
+    );
 
     return deferred.promise;
 }
