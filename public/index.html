@@ -60,7 +60,10 @@
                                 {{view Ember.TextField valueBinding="newList" action="createList" placeholder="List Name"}}
                                 </li>
                             {{#each list in controller}}
-                                <li class="list-group-item">{{#linkTo "lists" list}}{{list.title}}{{/linkTo}}</li>
+                                <li class="list-group-item">
+                                    {{#linkTo "lists" list}}{{list.title}}{{/linkTo}}
+                                    <button {{action deleteList list}} class="close">&times;</button>
+                                </li>
                             {{/each}}
                             </ul>
                         </div>
@@ -118,9 +121,9 @@
                     {{#view Unminder.SiteThumbnail}}
                     <div class="thumbnail" draggable="true">
 
-                        <button data-toggle="tooltip" title="remove" {{action delete site}} class="close">&times;</button>
+                        <button {{action delete site}} class="close">&times;</button>
                         <a target="_blank" {{bindAttr href="site.url"}}>
-                            <h4 class="site-title">{{site.title}}</h4>
+                            <h4 class="title-site">{{site.title}}</h4>
                         </a>
 
                         <a target="_blank" {{bindAttr href="site.url"}} class="thumbnail-image-container" draggable="false">
@@ -148,9 +151,9 @@
                     {{#view Unminder.SiteThumbnail}}
                     <div class="thumbnail" draggable="true">
 
-                        <button data-toggle="tooltip" title="remove" {{action delete site}} class="close">&times;</button>
+                        <button {{action delete site}} class="close">&times;</button>
                         <a target="_blank" {{bindAttr href="site.url"}}>
-                            <h4 class="site-title">{{site.title}}</h4>
+                            <h4 class="title-site">{{site.title}}</h4>
                         </a>
 
                         <a target="_blank" {{bindAttr href="site.url"}} class="thumbnail-image-container" draggable="false">
@@ -176,7 +179,7 @@
 
                     <button data-toggle="tooltip" title="remove" {{action delete site}} class="close">&times;</button>
                     <a target="_blank" {{bindAttr href="site.url"}}>
-                        <h4 class="site-title">{{site.title}}</h4>
+                        <h4 class="title-site">{{site.title}}</h4>
                     </a>
 
                     <a target="_blank" {{bindAttr href="site.url"}} class="thumbnail-image-container" draggable="false">

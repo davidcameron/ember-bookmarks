@@ -115,6 +115,10 @@ Unminder.ApplicationController = Ember.ArrayController.extend({
         this.get('store').commit();
 
         this.set('newList', '');
+    },
+    deleteList: function (list) {
+        this.get('store').deleteRecord(list);
+        this.get('store').commit();
     }
 });
 

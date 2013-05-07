@@ -1,4 +1,8 @@
-.site-title {
+body {
+    font-family: "Open Sans";
+}
+
+.title-site {
 	font-size: 18px;
     font-weight: 300;
 	line-height: 18px;
@@ -6,6 +10,12 @@
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+}
+
+.title-app {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-weight: 300;
 }
 
 .thumbnail {
@@ -71,12 +81,6 @@
     -webkit-animation: spin 1s infinite linear;
 }
 
-.title-app {
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-weight: 300;
-}
-
 .navbar {
     margin-bottom: 20px;
 }
@@ -92,6 +96,7 @@
     color: white;
 }
 
-body {
-    font-family: "Open Sans";
+/* Bootstrap 3 overrides */
+.list-group-item {
+    padding: 10px 15px 10px 15px;
 }
