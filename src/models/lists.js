@@ -55,20 +55,22 @@ function findOne (id) {
     var deferred = Q.defer();
     
     List.find(
-        {},
+        {id: id},
         {include: {sites: {only: ['id']}}},
         function (err, result) {
             if (err) {
                 deferred.reject(err);
             } else {
                 var item = result[0];
-                item.site_ids = [];
+                if (item) {
+                    item.site_ids = [];
 
-                item.sites.forEach(function (site) {
-                    item.site_ids.push(site.id);
-                });
+                    item.sites.forEach(function (site) {
+                        item.site_ids.push(site.id);
+                    });
 
-                delete item.sites;
+                    delete item.sites;
+                }
 
                 deferred.resolve(item);
             }
@@ -89,7 +91,7 @@ function create (data) {
         if (err) {
             deferred.reject(err);
         } else {
-            deferred.resolve();
+            deferred.resolve(results.rows[0]);
         }
     });
 

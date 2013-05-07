@@ -17,13 +17,11 @@ app.use('/media', express.static(__dirname + '/media'));
 
 app.get('/api/sites', function (req, res) {
     sites.findAll().then(function (data) {
-        console.log(data);
         res.send({sites: data});
     });
 });
 
 app.get('/api/sites/:id', function (req, res) {
-    console.log('get site by id!');
     
     sites.findOne(req.params.id).then(function (data) {
         res.send({site: data});
@@ -34,8 +32,14 @@ app.get('/api/sites/:id', function (req, res) {
 app.post('/api/sites', function (req, res) {    
     sites.create(req.body).then(function (data) {
         res.send({site: data});
-    });
+    }); 
+});
+
+app.put('/api/sites/:id', function (req, res) {
     
+    sites.update(req.params.id, req.body.site).then(function (data) {
+        res.send({site: data});
+    });
 });
 
 app.delete('/api/sites/:id', function (req, res) {
@@ -47,14 +51,12 @@ app.delete('/api/sites/:id', function (req, res) {
 /* List API */
 
 app.get('/api/lists', function (req, res) {
-    console.log('get lists');
     lists.findAll().then(function (data) {
         res.send({lists: data});
     });
 });
 
 app.get('/api/lists/:id', function (req, res) {
-    console.log('get list by id!');
     
     lists.findOne(req.params.id).then(function (data) {
         res.send({list: data});
@@ -63,7 +65,7 @@ app.get('/api/lists/:id', function (req, res) {
 
 app.post('/api/lists', function (req, res) {    
     lists.create(req.body).then(function (data) {
-        res.send({lists: data});
+        res.send({list: data});
     });
 });
 

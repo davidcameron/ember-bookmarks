@@ -133,7 +133,9 @@
                                 {{/unless}}
                             </div>
                         </a>
+                    {{#if site.list}}
                         <p>List:{{#linkTo "lists" site.list}} {{site.list.title}}{{/linkTo}}</p>
+                    {{/if}}
                     </div>
                     {{/view}}
                 {{/each}}
@@ -168,32 +170,6 @@
                 {{/each}}
                 </div>
             </div>
-        </script>
-
-        <script type="text/x-handlebars" data-template-name="category">
-            <h2>Category Template: {{slug}}</h2>
-            <ul class="thumbnails site-list">
-            {{#each site in controller.filteredSites}}
-                {{#view Unminder.SiteThumbnail}}
-                <div class="thumbnail" draggable="true">
-
-                    <button data-toggle="tooltip" title="remove" {{action delete site}} class="close">&times;</button>
-                    <a target="_blank" {{bindAttr href="site.url"}}>
-                        <h4 class="title-site">{{site.title}}</h4>
-                    </a>
-
-                    <a target="_blank" {{bindAttr href="site.url"}} class="thumbnail-image-container" draggable="false">
-                        <div class="thumbnail-image" {{bindAttr style="site.backgroundStyle"}}>
-                            {{#unless site.image}}
-                            {{view Unminder.SpinnerView}}
-                            {{/unless}}
-                        </div>
-                    </a>
-                    <p>Category: {{site.category}}</p>
-                </div>
-                {{/view}}
-            {{/each}}
-            </ul>
         </script>
 
         <!-- /Templates -->

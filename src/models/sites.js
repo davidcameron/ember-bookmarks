@@ -41,7 +41,7 @@ function findOne (id) {
     var deferred = Q.defer();
     
     Site.find({id: id}, function (err, results) {
-        item = results.rows[0];
+        item = results[0];
         delete item.copy;
         item.image = './media/screenshots/' + item.image + '.png';
         deferred.resolve(item);
@@ -90,6 +90,28 @@ function create (data) {
     return deferred.promise;
 }
 
+function update (id, data) {
+    var deferred = Q.defer();
+
+    // Ember doesn't send up a list id if the list gets deleted
+    if (!data.list_id) {
+        data.list_id = null;
+    }
+
+    // The image URL isn't stored in the DB
+    delete data.image;
+    
+    Site.update(
+        {id: id},
+        data,
+        function (err, results) {
+            findOne(id).then(deferred.resolve);
+        }
+    );
+
+    return deferred.promise;
+}
+
 function destroy (id) {
     var deferred = Q.defer();
 
@@ -107,4 +129,5 @@ function destroy (id) {
 exports.findAll = findAll;
 exports.findOne = findOne;
 exports.create = create;
+exports.update = update;
 exports.destroy = destroy;
