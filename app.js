@@ -56,7 +56,7 @@ app.get('/api/lists', function (req, res) {
 app.get('/api/lists/:id', function (req, res) {
     console.log('get list by id!');
     
-    list.findOne(req.params.id).then(function (data) {
+    lists.findOne(req.params.id).then(function (data) {
         res.send({list: data});
     });
 });

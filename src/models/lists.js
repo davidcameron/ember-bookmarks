@@ -55,8 +55,13 @@ function findOne (id) {
     var deferred = Q.defer();
     
     List.find({id: id}, function (err, results) {
-        item = results.rows[0];
-        deferred.resolve(item);
+        console.log(id, err, results);
+        if (err) {
+            deferred.reject(err);
+        } else {
+            item = results[0];
+            deferred.resolve(item);
+        }
     });
 
     return deferred.promise;

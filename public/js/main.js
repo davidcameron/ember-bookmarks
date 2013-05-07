@@ -24,6 +24,7 @@ var Unminder = Ember.Application.create();
 
 Unminder.Router.map(function () {
     this.resource('sites', {path: '/sites'});
+    this.resource('lists', {path: '/lists/:list_id'});
 });
 
 /* Routes */
@@ -43,6 +44,17 @@ Unminder.IndexRoute = Ember.Route.extend({
 Unminder.SitesRoute = Ember.Route.extend({
     model: function () {
         return Unminder.Site.find();
+    }
+});
+
+Unminder.ListsRoute = Ember.Route.extend({
+    setupController: function (controller, model) {
+        controller.set('content', model.get('sites'));
+        controller.set('heading', model.get('title'));
+        controller.set('template', 'sites');
+    },
+    model: function (params) {
+        return Unminder.List.find(params.list_id);
     }
 });
 
@@ -98,8 +110,7 @@ Unminder.ApplicationController = Ember.ArrayController.extend({
     },
     createList: function () {
         var listName = this.get('newList');
-        var id = new ObjectId().toString();
-        Unminder.List.createRecord({title: listName, id: id});
+        Unminder.List.createRecord({title: listName});
 
         this.get('store').commit();
 
@@ -108,6 +119,13 @@ Unminder.ApplicationController = Ember.ArrayController.extend({
 });
 
 Unminder.SitesController = Ember.ArrayController.extend({
+    delete: function (site) {
+        this.get('store').deleteRecord(site);
+        this.get('store').commit();
+    }
+});
+
+Unminder.ListsController = Ember.ObjectController.extend({
     delete: function (site) {
         this.get('store').deleteRecord(site);
         this.get('store').commit();

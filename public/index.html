@@ -60,7 +60,7 @@
                                 {{view Ember.TextField valueBinding="newList" action="createList" placeholder="List Name"}}
                                 </li>
                             {{#each list in controller}}
-                                <li class="list-group-item">{{list.title}}</li>
+                                <li class="list-group-item">{{#linkTo "lists" list}}{{list.title}}{{/linkTo}}</li>
                             {{/each}}
                             </ul>
                         </div>
@@ -130,7 +130,36 @@
                                 {{/unless}}
                             </div>
                         </a>
-                        <p>Category: {{site.category}}</p>
+                        <p>List:{{#linkTo "lists" site.list}} {{site.list.title}}{{/linkTo}}</p>
+                    </div>
+                    {{/view}}
+                {{/each}}
+                </div>
+            </div>
+        </script>
+
+        <script type="text/x-handlebars" data-template-name="lists">
+            <div class="row">
+                <h2 class="col-span-12">{{heading}}:</h2>
+            </div>
+            <div class="row">
+                <div class="col-span-12 site-list">
+                {{#each site in content}}
+                    {{#view Unminder.SiteThumbnail}}
+                    <div class="thumbnail" draggable="true">
+
+                        <button data-toggle="tooltip" title="remove" {{action delete site}} class="close">&times;</button>
+                        <a target="_blank" {{bindAttr href="site.url"}}>
+                            <h4 class="site-title">{{site.title}}</h4>
+                        </a>
+
+                        <a target="_blank" {{bindAttr href="site.url"}} class="thumbnail-image-container" draggable="false">
+                            <div class="thumbnail-image" {{bindAttr style="site.backgroundStyle"}}>
+                                {{#unless site.image}}
+                                {{view Unminder.SpinnerView}}
+                                {{/unless}}
+                            </div>
+                        </a>
                     </div>
                     {{/view}}
                 {{/each}}
