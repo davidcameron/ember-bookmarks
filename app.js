@@ -5,6 +5,7 @@ var express = require('express'),
     io = require('socket.io').listen(server),
     sites = require('./src/models/sites'),
     lists = require('./src/models/lists'),
+    users = require('./src/models/users'),
     theSocket = {};
 
 io.set('log level', 2);
@@ -80,10 +81,40 @@ app.delete('/api/lists/:id', function (req, res) {
 });
 
 
+/* User API */
+
+app.get('/api/users', function (req, res) {
+    users.findAll().then(function (data) {
+        res.send({users: data});
+    });
+});
+
+app.get('/api/users/:id', function (req, res) {
+    
+    sites.findOne(req.params.id).then(function (data) {
+        res.send({site: data});
+    });
+});
+
+
+app.post('/api/users', function (req, res) {    
+    users.create(req.body.user).then(function (data) {
+        res.send({site: data});
+    }); 
+});
+
+
+app.delete('/api/users/:id', function (req, res) {
+    users.destroy(req.params.id).then(function () {
+        res.send();
+    });
+});
+
+
 // Create doesn't work until Socket.io is connected
 io.sockets.on('connection', function (socket) {
     socket.emit('connected');
     theSocket = socket;
 });
-//app.listen(8080);
+
 server.listen(8080);

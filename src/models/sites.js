@@ -41,7 +41,7 @@ function findOne (id) {
     var deferred = Q.defer();
     
     Site.find({id: id}, function (err, results) {
-        item = results[0];
+        var item = results[0];
         delete item.copy;
         item.image = './media/screenshots/' + item.image + '.png';
         deferred.resolve(item);

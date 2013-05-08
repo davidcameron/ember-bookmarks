@@ -45,6 +45,11 @@ body {
 	padding-left: 0;
 }
 
+.input-group-btn input[type=checkbox] {
+    width: auto;
+    display: inline-block;
+}
+
 /* Animation keyframes - you need to add prefixes */
 @-webkit-keyframes spin {
     from { -webkit-transform: rotate(0deg); }

@@ -25,6 +25,8 @@ var Unminder = Ember.Application.create();
 Unminder.Router.map(function () {
     this.resource('sites', {path: '/sites'});
     this.resource('lists', {path: '/lists/:list_id'});
+    this.route('login');
+    this.route('signup');
 });
 
 /* Routes */
@@ -90,6 +92,12 @@ Unminder.List = DS.Model.extend({
     sites: DS.hasMany('Unminder.Site')
 });
 
+Unminder.User = DS.Model.extend({
+    email: DS.attr('string'),
+    name: DS.attr('string'),
+    password: DS.attr('string')
+});
+
 /* Controllers */
 
 Unminder.ApplicationController = Ember.ArrayController.extend({
@@ -122,7 +130,7 @@ Unminder.ApplicationController = Ember.ArrayController.extend({
     }
 });
 
-Unminder.SitesController = Ember.ArrayController.extend({
+Unminder.SitesController = Ember.Controller.extend({
     delete: function (site) {
         this.get('store').deleteRecord(site);
         this.get('store').commit();
@@ -134,6 +142,14 @@ Unminder.ListsController = Ember.ObjectController.extend({
         this.get('store').deleteRecord(site);
         this.get('store').commit();
     }
+});
+
+Unminder.SignupController = Ember.Controller.extend({
+    passwordType: function () {
+        console.log('passwordType!');
+        return this.get('showPassword') ? 'text' : 'password';
+    }.property('showPassword'),
+    namePlaceholder: 'Dave!'
 });
 
 /* Views */
