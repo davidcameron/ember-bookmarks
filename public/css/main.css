@@ -7,6 +7,7 @@ body {
     font-weight: 300;
 	line-height: 18px;
 	height: 20px;
+    margin-top: 0;
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
@@ -29,6 +30,10 @@ body {
 .thumbnail-image {
     background-size: cover;
     height: 200px;
+}
+
+.thumbnail p {
+    margin: 0;
 }
 
 /* Boostrap Fixes */
