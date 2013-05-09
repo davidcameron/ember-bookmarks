@@ -130,7 +130,7 @@ Unminder.ApplicationController = Ember.ArrayController.extend({
     }
 });
 
-Unminder.SitesController = Ember.Controller.extend({
+Unminder.SitesController = Ember.ArrayController.extend({
     delete: function (site) {
         this.get('store').deleteRecord(site);
         this.get('store').commit();
