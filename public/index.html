@@ -108,32 +108,40 @@
             <div class="row">
                 <div class="col-span-12">
                     <form class="form-horizontal">
+
                         <div class="control-group">
-                            <label class="control-label" for="user_name">{{namePlaceholder}}</label>
+                            <label class="control-label" for="user_name">Your name</label>
                             <div class="controls">
-                                {{view Ember.TextField valueBinding="newUserName" name="user_name" placeholder="Tyrion Lannister" class="col-span-4"}}
+                                {{view Ember.TextField valueBinding="newUserName" name="user_name" placeholder="Tyrion Lannister" class="col-span-6"}}
                             </div>
                         </div>
 
                         <div class="control-group">
                             <label class="control-label" for="user_email">Your email address</label>
                             <div class="controls">
-                                {{view Ember.TextField valueBinding="newUserEmail" name="user_email" placeholder="tyrion@lannister.net" class="col-span-4"}}
+                                {{view Ember.TextField valueBinding="newUserEmail" name="user_email" placeholder="tyrion@lannister.net" class="col-span-6"}}
                             </div>
                         </div>
 
                         <div class="control-group">
                             <label class="control-label" for="user_password">Your password</label>
                             <div class="controls">
-                                <div class="input-group col-span-4">
+                                <div class="input-group col-span-6">
                                     {{view Ember.TextField typeBinding="passwordType" valueBinding="newUserPassword" name="user_password"}}
                                     <div class="input-group-btn">
                                         <label class="btn">
                                             Show: {{view Ember.Checkbox checkedBinding="showPassword"}}
                                         </label>
                                     </div>
+                                </div>
                             </div>
                         </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                <button {{action signupUser}} class="btn btn-primary col-span-6">Signup!</button>
+                            </div>
+                        </div>
+
                     </form>
                 </div>
             </div>
