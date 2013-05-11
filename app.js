@@ -98,9 +98,13 @@ app.get('/api/users/:id', function (req, res) {
 
 
 app.post('/api/users', function (req, res) {    
-    users.create(req.body.user).then(function (data) {
-        res.send({site: data});
-    }); 
+    users.create(req.body.user)
+        .then(function (data) {
+            res.send({site: data});
+        })
+        .fail(function (err) {
+            console.log('Create user error:', err);
+        });
 });
 
 

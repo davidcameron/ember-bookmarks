@@ -14,14 +14,14 @@ var connectionParams = {
 fastLegs.connect(connectionParams);
 
 var User = fastLegs.Base.extend({
-    tableName : 'user',
+    tableName : 'users',
     primaryKey : 'id'
 });
 
 function create (data) {
     var deferred = Q.defer();
-
     data.password_hash = passwordHash.generate(data.password);
+    
 
     User.create(
         {
