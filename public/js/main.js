@@ -3,19 +3,14 @@
 var socket = io.connect();
 
 socket.on('connected', function () {
-    console.log('emitted connected');
 });
 
 socket.on('posting', function () {
-    console.log('emitted posting');
 });
 
 socket.on('create:site', function (data) {
-    console.log('create:site', data);
     var id = data[0].id;
-    console.log('id:', id);
     Unminder.Site.find(id).reload();
-    console.log(Unminder.Site.find(id));
 });
 
 var Unminder = Ember.Application.create();
@@ -96,9 +91,8 @@ Unminder.ApplicationController = Ember.ArrayController.extend({
     createSite: function () {
         var url = this.get('newSite'),
             list = this.get('newSiteList');
-            console.log(list);
 
-        if (url.substring(0, 7) !== 'http://') {
+        if (url.substring(0, 7) !== 'http://' && url.substring(0, 8) !== 'https://') {
             url = 'http://' + url;
         }
 
