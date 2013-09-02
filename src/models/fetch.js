@@ -20,7 +20,7 @@ function getSite (url) {
 		done: fetchText
 	});
 
-	webshot(url, mediaDir + md5(url) + '.png', function (err) {
+	webshot(url, mediaDir + md5(url) + '.png', {'ignoreSslErrors': true}, function (err) {
 		console.log('webshot callback');
 		if (err) {
 			console.log('webshot err', err);
@@ -41,6 +41,7 @@ function getSite (url) {
 
 function fetchText(errors, window) {
 	console.log('fetchText callback');
+	console.log(errors);
 	var $ = window.$,
 		data = {};
 		copy = $('body').clone(),
@@ -53,7 +54,7 @@ function fetchText(errors, window) {
 
 	data.copy = copy.text();
 	data.title = title;
-	console.log('textDeferred resolution: ', data.title);
+	console.log('textDeferred resolution: ', data);
     textDeferred.resolve(data);
 }
 

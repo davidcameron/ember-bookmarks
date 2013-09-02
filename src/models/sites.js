@@ -56,7 +56,7 @@ function create (data) {
     data = data.site;
     var url = data.url;
 
-    if (url.substring(0, 7) !== 'http://') {
+    if (url.substring(0, 7) !== 'http://' && url.substring(0, 8) !== 'https://') {
         url = 'http://' + url;
     }
 
