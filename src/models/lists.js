@@ -32,15 +32,13 @@ function findAll () {
             if (err) {
                 deferred.reject(err);
             } else {
-                results.map(function (el) {
-                    el.site_ids = [];
+                results.map(function (list) {
+                    var sites = list.sites;
+                    list.sites = [];
 
-                    el.sites.forEach(function (site) {
-                        el.site_ids.push(site.id);
+                    sites.forEach(function (site) {
+                        list.sites.push(site.id);
                     });
-
-                    delete el.sites;
-                    return el;
                 });
 
                 deferred.resolve(results);
@@ -56,21 +54,15 @@ function findOne (id) {
     
     List.find(
         {id: id},
-        {include: {sites: {only: ['id']}}},
+        {include: {sites: {}}},
         function (err, result) {
             if (err) {
                 deferred.reject(err);
             } else {
                 var item = result[0];
-                if (item) {
-                    item.site_ids = [];
-
-                    item.sites.forEach(function (site) {
-                        item.site_ids.push(site.id);
-                    });
-
-                    delete item.sites;
-                }
+                item.sites.forEach(function (site) {
+                    site.list = site.list_id;
+                });
 
                 deferred.resolve(item);
             }

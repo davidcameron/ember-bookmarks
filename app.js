@@ -2,12 +2,8 @@ var express = require('express'),
     app = express(),
     http = require('http'),
     server = http.createServer(app),
-    io = require('socket.io').listen(server),
     sites = require('./src/models/sites'),
-    lists = require('./src/models/lists'),
-    theSocket = {};
-
-io.set('log level', 2);
+    lists = require('./src/models/lists');
 
 app.use(express.bodyParser());
 app.use(express.static(__dirname + '/public'));
@@ -58,8 +54,16 @@ app.get('/api/lists', function (req, res) {
 
 app.get('/api/lists/:id', function (req, res) {
     
-    lists.findOne(req.params.id).then(function (data) {
-        res.send({list: data});
+    lists.findOne(req.params.id).then(function (list) {
+        var sites = list.sites;
+
+        list.sites = [];
+
+        sites.forEach(function (site) {
+            list.sites.push(site.id);
+        });
+
+        res.send({list: list, sites: sites});
     });
 });
 
@@ -79,11 +83,4 @@ app.delete('/api/lists/:id', function (req, res) {
     });
 });
 
-
-// Create doesn't work until Socket.io is connected
-io.sockets.on('connection', function (socket) {
-    socket.emit('connected');
-    theSocket = socket;
-});
-//app.listen(8080);
 server.listen(8080);

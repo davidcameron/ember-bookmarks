@@ -19,7 +19,6 @@
 
 
         <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-        <script src="/socket.io/socket.io.js"></script>
 
         <!-- Templates -->
         <script type="text/x-handlebars" data-template-name="application">
@@ -36,7 +35,7 @@
                         </button>
 
                         <!-- Be sure to leave the brand out there if you want it shown -->
-                        <a class="navbar-brand" href="#">Unminder</a>
+                        <a class="navbar-brand" href="#">{{appTitle}}</a>
 
                         <!-- Place everything within .navbar-collapse to hide it until above 768px -->
                         <div class="nav-collapse collapse navbar-responsive-collapse">
@@ -48,7 +47,6 @@
                     </div><!-- /.container -->
                 </div><!-- /.navbar -->
 
-
                 <div class="row">
 
                     <div class="col-span-3">
@@ -57,12 +55,12 @@
                             <p>Organize your sites into logical lists!</p>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">
-                                {{view Ember.TextField valueBinding="newList" action="createList" placeholder="List Name"}}
+                                    {{view Ember.TextField valueBinding="newList" action="createList" placeholder="List Name"}}
                                 </li>
                             {{#each list in controller}}
                                 <li class="list-group-item">
                                     {{#linkTo "lists" list}}{{list.title}}{{/linkTo}}
-                                    <button {{action deleteList list}} class="close">&times;</button>
+                                    <button {{action "deleteList" list}} class="close">&times;</button>
                                 </li>
                             {{/each}}
                             </ul>
@@ -91,15 +89,51 @@
                                 </div>
                             {{/if}}
                         </div>
-                        {{outlet}}
+                        <div class="row">
+                            {{outlet}}
+                        </div>
                     </div>
                 </div>
-            </div>
+
         </script>
 
         <script type="text/x-handlebars" data-template-name="index">
             <h2>Welcome to the Unminder Sandbox</h2>
             <p class="lead">Feel free to add and delete lists and sites!</p>
+        </script>
+
+        <script type="text/x-handlebars" data-template-name="sites">
+            <div class="row">
+                <h2 class="col-span-12">Site list:</h2>
+            </div>
+            <div class="row">
+            {{#each site in controller}}
+
+                <div class="col-span-4">
+                    <div class="thumbnail">
+                        <button {{action deleteSite site}} class="close">&times;</button>
+                        <a target="_blank" {{bindAttr href="site.url"}}>
+                            <h4 class="title-site">{{site.title}}</h4>
+                        </a>
+
+                        <a target="_blank" {{bindAttr href="site.url"}} class="thumbnail-image-container" draggable="false">
+                            <div class="thumbnail-image" {{bindAttr style="site.backgroundStyle"}}>
+                                {{#unless site.image}}
+                                {{view Unminder.SpinnerView}}
+                                {{/unless}}
+                            </div>
+                        </a>
+                    {{#if site.list_id}}<h1>List ID: {{site.list_id}}{{/if}}
+                    {{#if site.list}}
+                        <p>List:{{#linkTo "lists" site.list}} {{site.list.title}}{{/linkTo}}</p>
+                    {{else}}
+                        <br>
+                    {{/if}}
+                    </div>
+                </div>
+
+            {{/each}}
+            </div>
         </script>
 
         <script type="text/x-handlebars" data-template-name="spinner">
@@ -112,71 +146,7 @@
             </div>
         </script>
 
-        <script type="text/x-handlebars" data-template-name="sites">
-            <div class="row">
-                <h2 class="col-span-12">Site list:</h2>
-            </div>
-            <div class="row">
-                <div class="col-span-12 site-list">
-                {{#each site in controller}}
-                    {{#view Unminder.SiteThumbnail}}
-                    <div class="thumbnail" draggable="true">
-
-                        <button {{action delete site}} class="close">&times;</button>
-                        <a target="_blank" {{bindAttr href="site.url"}}>
-                            <h4 class="title-site">{{site.title}}</h4>
-                        </a>
-
-                        <a target="_blank" {{bindAttr href="site.url"}} class="thumbnail-image-container" draggable="false">
-                            <div class="thumbnail-image" {{bindAttr style="site.backgroundStyle"}}>
-                                {{#unless site.image}}
-                                {{view Unminder.SpinnerView}}
-                                {{/unless}}
-                            </div>
-                        </a>
-                    {{#if site.list}}
-                        <p>List:{{#linkTo "lists" site.list}} {{site.list.title}}{{/linkTo}}</p>
-                    {{else}}
-                        <br>
-                    {{/if}}
-                    </div>
-                    {{/view}}
-                {{/each}}
-                </div>
-            </div>
-        </script>
-
-        <script type="text/x-handlebars" data-template-name="lists">
-            <div class="row">
-                <h2 class="col-span-12">{{heading}}:</h2>
-            </div>
-            <div class="row">
-                <div class="col-span-12 site-list">
-                {{#each site in content}}
-                    {{#view Unminder.SiteThumbnail}}
-                    <div class="thumbnail" draggable="true">
-
-                        <button {{action delete site}} class="close">&times;</button>
-                        <a target="_blank" {{bindAttr href="site.url"}}>
-                            <h4 class="title-site">{{site.title}}</h4>
-                        </a>
-
-                        <a target="_blank" {{bindAttr href="site.url"}} class="thumbnail-image-container" draggable="false">
-                            <div class="thumbnail-image" {{bindAttr style="site.backgroundStyle"}}>
-                                {{#unless site.image}}
-                                {{view Unminder.SpinnerView}}
-                                {{/unless}}
-                            </div>
-                        </a>
-                    </div>
-                    {{/view}}
-                {{/each}}
-                </div>
-            </div>
-        </script>
-
         <!-- /Templates -->
-
 
     </head>
     <body>
@@ -186,27 +156,14 @@
 
         <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
 
-        
-
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
 
         <script src="js/vendor/bootstrap.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0-rc.3/handlebars.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/ember.js/1.0.0-rc.2/ember.min.js"></script>
-        <script src="js/vendor/ember-data.js"></script>
-        <script src="js/vendor/Objectid.js"></script>
-        
-
-
+        <script src="js/vendor/handlebars-1.0.0.js"></script>
+        <script src="http://builds.emberjs.com/release/ember.js"></script>
+        <script src="http://builds.emberjs.com/canary/ember-data.js"></script>
 
         <script src="js/main.js"></script>
-
-        <script>
-            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-            s.parentNode.insertBefore(g,s)}(document,'script'));
-        </script>
     </body>
 </html>

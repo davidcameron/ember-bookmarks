@@ -24,14 +24,13 @@ function findAll () {
         if (results) {
             results.map(function (el) {
                 delete el.copy;
-                el.image = './media/screenshots/' + el.image + '.png';
+                el.list = el.list_id;
                 return el;
             });
             deferred.resolve(results);
         } else {
             deferred.resolve({});
         }
-        
     });
 
     return deferred.promise;
@@ -43,7 +42,6 @@ function findOne (id) {
     Site.find({id: id}, function (err, results) {
         item = results[0];
         delete item.copy;
-        item.image = './media/screenshots/' + item.image + '.png';
         deferred.resolve(item);
     });
 
@@ -62,7 +60,7 @@ function create (data) {
 
     Site.create({
         url: url,
-        list_id: data.list_id,
+        list_id: data.list,
     }, function (err, results) {
         if (err) {
             deferred.reject(err);
@@ -75,12 +73,11 @@ function create (data) {
                     function (err, result) {
                         if (err) {
                             deferred.reject(err);
-                        } else {
-                            Site.find({id: site.id}, function (err, results) {
-                                results[0].image = './media/screenshots/' + results[0].image + '.png';
-                                deferred.resolve(results[0]);
-                            });
+                            return;
                         }
+                        Site.find({id: site.id}, function (err, results) {
+                            deferred.resolve(results[0]);
+                        });
                     }
                 );
             });
