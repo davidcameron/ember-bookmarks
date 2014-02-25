@@ -85,7 +85,7 @@
                                         optionValuePath="content.id"
                                         selectionBinding="controller.newSiteList"
                                         }}
-                                    {{#view Ember.Button action="createSite" target="controller" classNames="btn"}}Go!{{/view}}
+                                    <button class="btn" {{action "createSite"}}>Go!</button>
                                 </div>
                             {{/if}}
                         </div>
@@ -111,7 +111,7 @@
 
                 <div class="col-span-4">
                     <div class="thumbnail">
-                        <button {{action deleteSite site}} class="close">&times;</button>
+                        <button {{action "deleteSite" site}} class="close">&times;</button>
                         <a target="_blank" {{bindAttr href="site.url"}}>
                             <h4 class="title-site">{{site.title}}</h4>
                         </a>

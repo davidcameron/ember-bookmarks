@@ -67,7 +67,6 @@ Unminder.ApplicationController = Ember.ArrayController.extend({
             site = this.store.createRecord('site', {
                 url: url, list: list
             });
-            console.log('createList', site.get('list').get('title'));
 
             site.save();
 
@@ -93,6 +92,7 @@ Unminder.ApplicationController = Ember.ArrayController.extend({
 Unminder.SitesController = Ember.ArrayController.extend({
     actions: {
         deleteSite: function (site) {
+            this.content.removeObject(site);
             site.deleteRecord();
             site.save();
         }
